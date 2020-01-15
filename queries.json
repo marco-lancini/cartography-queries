@@ -1,0 +1,1199 @@
+[
+    {
+        "name": "iam_principal_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws"
+        ],
+        "description": "List of AWSPrincipal by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal) RETURN ",
+        "return": "a.name, a.id, p.name, p.userid, p.arn, p.passwordlastused",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "principal_name",
+            "principal_id",
+            "principal_arn",
+            "passwordlastused"
+        ]
+    },
+    {
+        "name": "iam_user_named",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "anomaly",
+            "inventory"
+        ],
+        "description": "Which named AWSUsers do exist?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSUser) RETURN ",
+        "return": "a.name, a.id, p.name, p.userid, p.passwordlastused ORDER BY a.name, p.passwordlastused",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "user_name",
+            "user_id",
+            "passwordlastused"
+        ]
+    },
+    {
+        "name": "iam_user_password",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "anomaly"
+        ],
+        "description": "Which AWSUser used a password to authenticate?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSUser) WHERE p.passwordlastused <> '' RETURN ",
+        "return": "a.name, a.id, p.name, p.userid, p.passwordlastused ORDER BY a.name, p.passwordlastused",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "user_name",
+            "user_id",
+            "passwordlastused"
+        ]
+    },
+    {
+        "name": "iam_accesskey_principal",
+        "type": "security",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "What AccountAccessKey have been created (to authenticate to AWSPrincipals)?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal)-[:AWS_ACCESS_KEY]->(k:AccountAccessKey) WITH a, p, k, collect(distinct k.accesskeyid) as keys RETURN ",
+        "return": "a.name, a.id, p.name, p.arn, count(keys), collect(distinct k.accesskeyid) ORDER BY count(keys) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "principal_name",
+            "principal_arn",
+            "number_of_keys",
+            "keys"
+        ]
+    },
+    {
+        "name": "iam_group_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws"
+        ],
+        "description": "List of AWSGroup by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(g:AWSGroup) RETURN ",
+        "return": "a.name, a.id, g.name, g.arn ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "group_name",
+            "group_arn"
+        ]
+    },
+    {
+        "name": "iam_user_groups",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of Groups an AWSPrincipal is member of",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal)-[m:MEMBER_AWS_GROUP]->(g:AWSGroup) RETURN ",
+        "return": "a.name, a.id, p.name, p.userid, p.arn, g.name ORDER BY a.name, g.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "principal_name",
+            "principal_id",
+            "principal_arn",
+            "group_name"
+        ]
+    },
+    {
+        "name": "iam_user_many_groups",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "Which AWSUsers are members of too many Groups?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(u:AWSUser)-[m:MEMBER_AWS_GROUP]->(g:AWSGroup) RETURN ",
+        "return": "a.name, a.id, u.name, u.userid, count(u.name), collect(distinct g.name) ORDER BY count(u.name) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "user_name",
+            "user_id",
+            "number_of_groups",
+            "groups"
+        ]
+    },
+    {
+        "name": "iam_policy_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of AWSPolicy by AWSAccount (attached to at least 1 entity)",
+        "query": "MATCH (a:AWSAccount)-[:AWS_POLICY]->(p:AWSPolicy) WHERE p.attachmentcount > 0 RETURN ",
+        "return": "a.name, a.id, p.name, p.isattachable, p.attachmentcount, p.updatedate ORDER BY a.name, p.attachmentcount DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "policy_name",
+            "is_attachable",
+            "attachment_count",
+            "update_date"
+        ]
+    },
+    {
+        "name": "iam_policy_many_accounts",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "Which AWSPolicy is used in too many AWSAccounts?",
+        "query": "MATCH (a:AWSAccount)-[:AWS_POLICY]->(p:AWSPolicy) WHERE p.attachmentcount > 0 RETURN ",
+        "return": "p.name, p.updatedate, count(a.name), collect(distinct a.name) ORDER BY count(a.name) DESC",
+        "result_headers": [
+            "policy_name",
+            "update_date",
+            "usage_count",
+            "accounts"
+        ]
+    },
+    {
+        "name": "iam_role_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of AWSRole by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:AWS_ROLE]->(r:AWSRole) RETURN ",
+        "return": "a.name, a.id, r.name, r.arn, r.roleid, r.createdate ORDER BY a.name, r.createdate",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "role_name",
+            "role_arn",
+            "role_id",
+            "creation_date"
+        ]
+    },
+    {
+        "name": "iam_role_assume_principal",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "Which AWSRole can be assumed by which AWSPrincipal?",
+        "query": "MATCH (a:AWSAccount)-[:AWS_ROLE]->(r:AWSRole)-[TRUSTS_AWS_PRINCIPAL]->(p:AWSPrincipal) WITH a, r, p, collect(distinct p.arn) as pps RETURN ",
+        "return": "a.name, a.id, r.name, r.arn, count(pps), collect(distinct p.arn) ORDER BY count(pps) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "role_name",
+            "role_arn",
+            "number_of_principals",
+            "principals"
+        ]
+    },
+    {
+        "name": "iam_role_assume_role",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "Which AWSRole can be assumed by which AWSRole?",
+        "query": "MATCH (a:AWSAccount)-[:AWS_ROLE]->(r1:AWSRole)-[STS_ASSUMEROLE_ALLOW]->(r2:AWSRole) WITH a, r1, r2, collect(distinct r2.arn) as roles RETURN ",
+        "return": "a.name, a.id, r1.name, r1.arn, count(roles), collect(distinct r2.arn) ORDER BY count(roles) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "role_name",
+            "role_arn",
+            "number_of_roles",
+            "roles"
+        ]
+    },
+    {
+        "name": "ec2_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EC2 instances by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance) RETURN ",
+        "return": "a.name, a.id, instance.instanceid, instance.state, instance.exposed_internet, instance.launchtime, instance.region ORDER BY a.name, instance.state, instance.exposed_internet",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "state",
+            "internet_exposed",
+            "launchtime",
+            "region"
+        ]
+    },
+    {
+        "name": "ec2_public",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "misconfig"
+        ],
+        "description": "Which EC2 instances are directly exposed to the internet?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance{exposed_internet: true}) RETURN ",
+        "return": "a.name, a.id, instance.instanceid, instance.state, instance.launchtime, instance.publicdnsname, instance.privateipaddress, instance.exposed_internet_type ORDER BY a.name, instance.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "state",
+            "launchtime",
+            "publicdnsname",
+            "private_ip",
+            "how_exposed"
+        ]
+    },
+    {
+        "name": "ec2_keypair_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EC2KeyPairs by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(k:EC2KeyPair) RETURN ",
+        "return": "a.name, a.id, k.keyname, k.id, k.region ORDER BY a.name, k.region DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "key_name",
+            "key_id",
+            "region"
+        ]
+    },
+    {
+        "name": "ec2_keypair",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "What EC2KeyPairs can login in which EC2 Instance?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance)<-[SSH_LOGIN_TO]-(k:EC2KeyPair) RETURN ",
+        "return": "a.name, a.id, k.keyname, k.id, count(instance.instanceid), collect(distinct instance.instanceid) ORDER BY count(instance.instanceid) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "key_name",
+            "key_id",
+            "usage_count",
+            "instances"
+        ]
+    },
+    {
+        "name": "ec2_keypair_unused",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "What EC2KeyPairs exist, but are unused (can't login in any EC2 Instance)?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(k:EC2KeyPair) WHERE NOT (k)-[:SSH_LOGIN_TO]->(:EC2Instance) RETURN ",
+        "return": "a.name, a.id, k.keyname, k.id ORDER BY a.name, k.id",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "key_name",
+            "key_id"
+        ]
+    },
+    {
+        "name": "ec2_old",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "Which EC2 instances are older than 90 days?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance) WHERE instance.launchtime < $target_date RETURN ",
+        "return": "a.name, a.id, instance.instanceid, instance.state, instance.exposed_internet, instance.launchtime ORDER BY a.name, instance.state, instance.exposed_internet",
+        "params": {
+            "n_recent_days": {
+                "param_name": "target_date",
+                "param_value": 90
+            }
+        },
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "state",
+            "internet_exposed",
+            "launchtime"
+        ]
+    },
+    {
+        "name": "ec2_instancetype",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "usage"
+        ],
+        "description": "List of instance types used by EC2 instances",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance) WITH a, instance, collect(distinct instance.instancetype) as num_type RETURN ",
+        "return": "a.name, a.id, instance.instancetype, count(num_type), collect(distinct instance.instanceid) ORDER BY count(num_type) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_type",
+            "usage_count",
+            "instances"
+        ]
+    },
+    {
+        "name": "ec2_imageid",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "usage"
+        ],
+        "description": "List of image IDs used by EC2 instances",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance) WITH a, instance, collect(distinct instance.imageid) as num_type RETURN ",
+        "return": "a.name, a.id, instance.imageid, count(num_type), collect(distinct instance.instanceid) ORDER BY count(num_type) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "image_id",
+            "usage_count",
+            "instances"
+        ]
+    },
+    {
+        "name": "ec2_security_groups",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "What SecurityGroups is each EC2 Instance part of?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance)-[MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup) WITH a, instance, sg, collect(distinct sg.name) as groups RETURN ",
+        "return": "a.name, a.id, instance.instanceid, count(groups), collect(distinct sg.name) ORDER BY count(groups) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instanceid",
+            "number_of_groups",
+            "security_groups"
+        ]
+    },
+    {
+        "name": "ec2_security_groups_detail",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking"
+        ],
+        "description": "What SecurityGroups is each EC2 Instance part of? (with description and rules)",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance)-[MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup) WITH a, instance, sg MATCH (:EC2SecurityGroup{id: sg.id})<-[MEMBER_OF_EC2_SECURITY_GROUP]-(p:IpPermissionInbound) RETURN ",
+        "return": "a.name, a.id, instance.instanceid, sg.name, sg.description, p.protocol, p.fromport, p.toport ORDER BY a.name, instance.instanceid, sg.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "securitygroup_name",
+            "securitygroup_description",
+            "protocol",
+            "port_from",
+            "port_to"
+        ]
+    },
+    {
+        "name": "rds_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of RDSInstance by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSInstance) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.endpoint_address, rds.publicly_accessible, rds.storage_encrypted, rds.master_username, rds.db_name, rds.instance_create_time ORDER BY a.name, rds.publicly_accessible, rds.storage_encrypted",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "rds_id",
+            "endpoint_address",
+            "publicly_accessible",
+            "storage_encrypted",
+            "master_username",
+            "db_name",
+            "creation_time"
+        ]
+    },
+    {
+        "name": "rds_unencrypted",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig"
+        ],
+        "description": "Which RDS instances have encryption turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSInstance{storage_encrypted: false}) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.storage_encrypted, rds.publicly_accessible, rds.endpoint_address, rds.db_name, rds.master_username ORDER BY a.name, rds.publicly_accessible",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "rds_id",
+            "storage_encrypted",
+            "publicly_accessible",
+            "endpoint_address",
+            "db_name",
+            "master_username"
+        ]
+    },
+    {
+        "name": "rds_public",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "misconfig"
+        ],
+        "description": "Which RDS instances are directly exposed to the internet?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSInstance{publicly_accessible: true}) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.publicly_accessible,rds.endpoint_address, rds.endpoint_port, rds.storage_encrypted, rds.master_username, rds.db_name, rds.engine_version ORDER BY a.name, rds.publicly_accessible, rds.storage_encrypted",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "rds_id",
+            "publicly_accessible",
+            "endpoint_address",
+            "endpoint_port",
+            "storage_encrypted",
+            "master_username",
+            "db_name",
+            "engine_version"
+        ]
+    },
+    {
+        "name": "rds_no_auth",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig"
+        ],
+        "description": "Which RDS instances have database authentication turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSInstance{iam_database_authentication_enabled: false}) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.storage_encrypted, rds.publicly_accessible, rds.endpoint_address, rds.db_name, rds.master_username ORDER BY a.name, rds.publicly_accessible",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "rds_id",
+            "storage_encrypted",
+            "publicly_accessible",
+            "endpoint_address",
+            "db_name",
+            "master_username"
+        ]
+    },
+    {
+        "name": "rds_security_groups",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "What SecurityGroups is each RDS Instance part of?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:RDSInstance)-[MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup) WITH a, instance, sg, collect(distinct sg.name) as groups RETURN ",
+        "return": "a.name, a.id, instance.db_instance_identifier, count(groups), collect(distinct sg.name) ORDER BY count(groups) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instanceid",
+            "number_of_groups",
+            "security_groups"
+        ]
+    },
+    {
+        "name": "s3_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of S3Bucket by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:S3Bucket) RETURN ",
+        "return": "a.name, a.id, s.name, s.anonymous_access, s.anonymous_actions, s.creationdate ORDER BY a.name, s.creationdate",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "bucket_name",
+            "anonymous_access",
+            "anonymous_actions",
+            "creationdate"
+        ]
+    },
+    {
+        "name": "s3_anonymous",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig"
+        ],
+        "description": "Which S3 buckets have a policy granting any level of anonymous access to the bucket?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:S3Bucket) WHERE s.anonymous_access = true RETURN ",
+        "return": "a.name, a.id, s.name, s.anonymous_access, s.anonymous_actions, s.creationdate ORDER BY a.name, s.creationdate",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "bucket_name",
+            "anonymous_access",
+            "anonymous_actions",
+            "creationdate"
+        ]
+    },
+    {
+        "name": "s3_acl",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "drift"
+        ],
+        "description": "Which S3 ACLs are applied to S3Buckets?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s3:S3Bucket)<-[:APPLIES_TO]-(acl:S3Acl) RETURN ",
+        "return": "a.name, a.id, s3.name, acl.displayname, acl.permission, acl.owner, acl.type, acl.id ORDER BY a.nam, s3.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "bucket_name",
+            "acl_name",
+            "acl_permission",
+            "acl_owner",
+            "acl_type",
+            "acl_id"
+        ]
+    },
+    {
+        "name": "dns_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking"
+        ],
+        "description": "List of DNSRecord / IP pairs by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[RESOURCE]->(z:AWSDNSZone)<-[MEMBER_OF_DNS_ZONE]-(r:DNSRecord) RETURN ",
+        "return": "a.name, a.id, z.name, r.name, r.type, r.value ORDER BY a.name, z.name, r.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "dns_zone",
+            "record_name",
+            "record_type",
+            "record_value"
+        ]
+    },
+    {
+        "name": "vpc_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking"
+        ],
+        "description": "List of AWSVpc by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[r:RESOURCE]->(v:AWSVpc) RETURN ",
+        "return": "a.name, a.id, v.id, v.is_default, v.region, v.primary_cidr_block ORDER BY a.name, v.region, v.default",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "vpc_id",
+            "default",
+            "region",
+            "primary_cidr_block"
+        ]
+    },
+    {
+        "name": "vpc_peering",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "Which VPC peerings have been created?",
+        "query": "MATCH (a1:AWSAccount)-[r1:RESOURCE|BLOCK_ASSOCIATION*..]->(b1:AWSCidrBlock)<-[peer:VPC_PEERING]->(b2:AWSCidrBlock)<-[r2:RESOURCE|BLOCK_ASSOCIATION*..]-(a2:AWSAccount) RETURN ",
+        "return": "a1.name, a1.id, b1.id, b1.cidr_block, peer.connection_id, peer.status_code, b2.cidr_block, b2.id, a2.id, a2.name ORDER BY a1.name, a2.name",
+        "result_headers": [
+            "account1_name",
+            "account2_id",
+            "block1_id",
+            "block1_cidr",
+            "peering_id",
+            "peering_status",
+            "block2_cidr",
+            "block2_id",
+            "account2_id",
+            "account2_name"
+        ]
+    },
+    {
+        "name": "vpc_peering_rules",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "List all VPC peerings that have been created, with their respective security group rules",
+        "query": "MATCH (outbound_account:AWSAccount)-[:RESOURCE|BLOCK_ASSOCIATION*..]->(:AWSCidrBlock)<-[r:VPC_PEERING]->(inbound_block:AWSCidrBlock)<-[:BLOCK_ASSOCIATION]-(inbound_vpc:AWSVpc)<-[:RESOURCE]-(inbound_account:AWSAccount) WITH inbound_vpc, inbound_block, outbound_account, inbound_account MATCH (inbound_range:IpRange{id: inbound_block.cidr_block})-[:MEMBER_OF_IP_RULE]->(inbound_rule:IpPermissionInbound)-[:MEMBER_OF_EC2_SECURITY_GROUP]->(inbound_group:EC2SecurityGroup)<-[:MEMBER_OF_EC2_SECURITY_GROUP]-(inbound_vpc) RETURN ",
+        "return": "outbound_account.name, inbound_account.name, inbound_range.range, inbound_rule.fromport, inbound_rule.toport, inbound_rule.protocol, inbound_group.name, inbound_vpc.id",
+        "result_headers": [
+            "outbound_account",
+            "inbound_account",
+            "inbound_range",
+            "inbound_port_from",
+            "inbound_port_to",
+            "inbound_protocol",
+            "inbound_security_group",
+            "inbound_vpc_id"
+        ]
+    },
+    {
+        "name": "vpc_security_groups",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "What SecurityGroups is each VPC associated with?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(v:AWSVpc)-[MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup) WITH a, v, sg, collect(distinct sg.name) as groups RETURN ",
+        "return": "a.name, a.id, v.id, count(groups), collect(distinct sg.name) ORDER BY count(groups) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "vpc",
+            "number_of_groups",
+            "security_groups"
+        ]
+    },
+    {
+        "name": "loadbalancer_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking"
+        ],
+        "description": "List of LoadBalancers by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancer)-->(listener:ELBListener) WITH a, l, listener, collect(distinct listener.port) as ports RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, l.dnsname, l.exposed_internet, l.createdtime, count(ports), collect(distinct listener.port) ORDER BY count(ports) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "dnsname",
+            "exposed_internet",
+            "creation_time",
+            "number_of_ports",
+            "ports"
+        ]
+    },
+    {
+        "name": "loadbalancer_security_groups",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "What SecurityGroups is each LoadBalancer part of?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:LoadBalancer)-[MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup) WITH a, instance, sg, collect(distinct sg.name) as groups RETURN ",
+        "return": "a.name, a.id, instance.name, count(groups), collect(distinct sg.name) ORDER BY count(groups) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instanceid",
+            "number_of_groups",
+            "security_groups"
+        ]
+    },
+    {
+        "name": "loadbalancer_public",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig",
+            "inventory",
+            "list",
+            "networking"
+        ],
+        "description": "Which LoadBalancers are directly exposed to the internet?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancer{exposed_internet: true})-->(listener:ELBListener) WITH a, l, listener, collect(distinct listener.port) as ports RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, l.dnsname, count(ports), collect(distinct listener.port) ORDER BY count(ports) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "dnsname",
+            "number_of_ports",
+            "ports"
+        ]
+    },
+    {
+        "name": "loadbalancer_ec2_list",
+        "tags": [
+            "cloud",
+            "aws",
+            "inventory",
+            "list",
+            "networking"
+        ],
+        "description": "Which EC2 instances are exposed by which LoadBalancer?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancer)-[EXPOSE]->(e:EC2Instance) WITH a, l, e, collect(distinct e.instanceid) as instances RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, count(instances), collect(distinct e.instanceid) ORDER BY count(instances) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "number_of_ec2",
+            "instances"
+        ]
+    },
+    {
+        "name": "loadbalancer_dns_list",
+        "tags": [
+            "cloud",
+            "aws",
+            "inventory",
+            "list",
+            "networking"
+        ],
+        "description": "Which DNSRecords are pointing to which LoadBalancer?",
+        "query": "MATCH (a:AWSAccount)-[RESOURCE]->(z:AWSDNSZone)<-[MEMBER_OF_DNS_ZONE]-(r:DNSRecord)-[DNS_POINTS_TO]->(l:LoadBalancer) WITH a, z, r, l, collect(distinct r.name) as records RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, count(records), collect(distinct r.name) ORDER BY count(records) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "number_of_records",
+            "records"
+        ]
+    },
+    {
+        "name": "loadbalancer_dns_list_detail",
+        "tags": [
+            "cloud",
+            "aws",
+            "inventory",
+            "list",
+            "networking"
+        ],
+        "description": "Which DNSRecords are pointing to which LoadBalancer? (with details)",
+        "query": "MATCH (a:AWSAccount)-[RESOURCE]->(z:AWSDNSZone)<-[MEMBER_OF_DNS_ZONE]-(r:DNSRecord)-[DNS_POINTS_TO]->(l:LoadBalancer) RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, r.name, r.type, r.value ORDER BY a.name, l.name, z.zoneid",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "record_name",
+            "record_type",
+            "record_value"
+        ]
+    },
+    {
+        "name": "loadbalancer_v2_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking"
+        ],
+        "description": "List of LoadBalancersV2 by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancerV2)-->(listener:ELBV2Listener) WITH a, l, listener, collect(distinct listener.port) as ports RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, l.dnsname, l.exposed_internet, l.createdtime, count(ports), collect(distinct listener.port) ORDER BY count(ports) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "dnsname",
+            "exposed_internet",
+            "creation_time",
+            "number_of_ports",
+            "ports"
+        ]
+    },
+    {
+        "name": "loadbalancer_v2_security_groups",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "networking",
+            "drift"
+        ],
+        "description": "What SecurityGroups is each LoadBalancerV2 part of?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:LoadBalancerV2)-[MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup) WITH a, instance, sg, collect(distinct sg.name) as groups RETURN ",
+        "return": "a.name, a.id, instance.name, count(groups), collect(distinct sg.name) ORDER BY count(groups) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instanceid",
+            "number_of_groups",
+            "security_groups"
+        ]
+    },
+    {
+        "name": "loadbalancer_v2_public",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig",
+            "inventory",
+            "list",
+            "networking"
+        ],
+        "description": "Which LoadBalancersV2 are directly exposed to the internet?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancerV2{exposed_internet: true})-->(listener:ELBV2Listener) WITH a, l, listener, collect(distinct listener.port) as ports RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, l.dnsname, count(ports), collect(distinct listener.port) ORDER BY count(ports) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "dnsname",
+            "number_of_ports",
+            "ports"
+        ]
+    },
+    {
+        "name": "loadbalancer_v2_ec2_list",
+        "tags": [
+            "cloud",
+            "aws",
+            "inventory",
+            "list",
+            "networking"
+        ],
+        "description": "Which EC2 instances are exposed by which LoadBalancerV2?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancerV2)-[EXPOSE]->(e:EC2Instance) WITH a, l, e, collect(distinct e.instanceid) as instances RETURN ",
+        "return": "a.name, a.id, l.name, l.scheme, count(instances), collect(distinct e.instanceid) ORDER BY count(instances) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "scheme",
+            "number_of_ec2",
+            "instances"
+        ]
+    },
+    {
+        "name": "gcp_project_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "Full list of GCPProjects",
+        "query": "MATCH (n:GCPProject) RETURN ",
+        "return": "n.projectid, n.displayname, n.projectnumber, n.lifecyclestate ORDER BY n.projectid",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "project_number",
+            "project_state"
+        ]
+    },
+    {
+        "name": "gcp_projects_by_org",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "List of GCPProjects by GCPOrganisation (might not contain all projects)",
+        "query": "MATCH (org:GCPOrganization)-[res:RESOURCE]->(a:GCPProject) RETURN ",
+        "return": "org.id, a.id, a.displayname, a.lifecyclestate ORDER BY org.id",
+        "result_headers": [
+            "org_id",
+            "project_id",
+            "project_name",
+            "project_state"
+        ]
+    },
+    {
+        "name": "gcp_projects_by_folder",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "List of GCPProjects by GCPFolders (might not contain all projects)",
+        "query": "MATCH (org:GCPOrganization)-[res:RESOURCE]->(f:GCPFolder)-[:RESOURCE]->(a:GCPProject) RETURN ",
+        "return": "org.id, f.displayname, f.id, a.id, a.displayname, a.lifecyclestate ORDER BY org.id, f.id, a.lifecyclestate",
+        "result_headers": [
+            "org_id",
+            "folder_name",
+            "folder_id",
+            "project_id",
+            "project_name",
+            "project_state"
+        ]
+    },
+    {
+        "name": "gcp_bucket_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "List of GCPBucket by GCPProject",
+        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(b:GCPBucket) RETURN ",
+        "return": "a.id, a.displayname, b.id, b.location, b.storage_class, b.iam_config_bucket_policy_only, b.retention_period, b.owner_entity, b.default_kms_key_name ORDER BY a.id, b.location",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "bucket_id",
+            "bucket_location",
+            "bucket_storage_class",
+            "bucket_policy_only",
+            "bucket_retention",
+            "bucket_owner",
+            "bucket_kms_key"
+        ]
+    },
+    {
+        "name": "gcp_instances_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "List of GCPInstances by GCPProject",
+        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance) RETURN ",
+        "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.internet_exposed ORDER BY a.id, instance.status",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "instance_name",
+            "instance_status",
+            "zone",
+            "internet_exposed"
+        ]
+    },
+    {
+        "name": "gcp_instances_by_vpc",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "List of GCPInstances by GCPVpc",
+        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(v:GCPVpc)<-[:MEMBER_OF_GCP_VPC]-(instance:GCPInstance) RETURN ",
+        "return": "a.id, a.displayname, v.id, instance.instancename, instance.status, instance.zone_name, instance.internet_exposed ORDER BY a.id, v.id, instance.status",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "vpc_id",
+            "instance_name",
+            "instance_status",
+            "zone",
+            "internet_exposed"
+        ]
+    },
+    {
+        "name": "gcp_instances_public",
+        "tags": [
+            "security",
+            "cloud",
+            "gcp",
+            "misconfig"
+        ],
+        "description": "Which GCPInstances are directly exposed to the internet?",
+        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance{internet_exposed: true}) RETURN ",
+        "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.internet_exposed ORDER BY a.id, instance.status",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "instance_name",
+            "instance_status",
+            "zone",
+            "internet_exposed"
+        ]
+    },
+    {
+        "name": "gcp_vpc_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list",
+            "networking"
+        ],
+        "description": "List of GCPVpc by GCPProject",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(v:GCPVpc) RETURN ",
+        "return": "a.id, a.displayname, v.name, v.id, v.description, v.routing_config_routing_mode ORDER BY a.id",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "vpc_name",
+            "vpc_id",
+            "vpc_description",
+            "vpc_routing_mode"
+        ]
+    },
+    {
+        "name": "gcp_subnet_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list",
+            "networking"
+        ],
+        "description": "List of GCPSubnet by GCPVpc",
+        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(v:GCPVpc)-[:RESOURCE]->(s:GCPSubnet) RETURN ",
+        "return": "a.id, a.displayname, v.name, v.id, v.description, s.name, s.ip_cidr_range, s.gateway_address, s.region ORDER BY a.id, v.id, s.region",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "vpc_name",
+            "vpc_id",
+            "vpc_description",
+            "subnet_name",
+            "subnet_cidr",
+            "subnet_gateway",
+            "subnet_region"
+        ]
+    },
+    {
+        "name": "gcp_firewall_allow",
+        "tags": [
+            "security",
+            "cloud",
+            "gcp",
+            "drift",
+            "networking"
+        ],
+        "description": "Which rules ALLOW traffic into GCPFirewalls?",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(v:GCPVpc)-[r:RESOURCE]->(f:GCPFirewall)<-[ALLOWED_BY]-(ru:GCPIpRule) RETURN ",
+        "return": "a.id, a.displayname, v.id, f.name, f.disabled, f.direction, ru.protocol, ru.fromport, ru.toport ORDER BY a.id, v.id, f.disabled, f.direction",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "vpc_id",
+            "firewall_name",
+            "firewall_disabled",
+            "firewall_direction",
+            "rule_protocol",
+            "rule_port_from",
+            "rule_port_to"
+        ]
+    },
+    {
+        "name": "gcp_firewall_deny",
+        "tags": [
+            "security",
+            "cloud",
+            "gcp",
+            "drift",
+            "networking"
+        ],
+        "description": "Which rules DENY traffic into GCPFirewalls?",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(v:GCPVpc)-[r:RESOURCE]->(f:GCPFirewall)<-[DENIED_BY]-(ru:GCPIpRule) RETURN ",
+        "return": "a.id, a.displayname, v.id, f.name, f.disabled, f.direction, ru.protocol, ru.fromport, ru.toport ORDER BY a.id, v.id, f.disabled, f.direction",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "vpc_id",
+            "firewall_name",
+            "firewall_disabled",
+            "firewall_direction",
+            "rule_protocol",
+            "rule_port_from",
+            "rule_port_to"
+        ]
+    }
+]
