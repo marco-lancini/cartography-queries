@@ -6,7 +6,9 @@ from IPython.display import Markdown
 from datetime import datetime, timedelta
 
 NEO4J_URI = "bolt://bolt-service:7687"
-NEO4J_QUERIES_FILE = 'queries.json'
+NEO4J_QUERIES_FILES = [
+    'queries.json',
+]
 
 # ==============================================================================
 # NEO4J
@@ -47,9 +49,21 @@ class QueryBuilder(object):
         # Initialize DB
         self.db = NeoDB()
         # Load the queries file into memory
-        with open(NEO4J_QUERIES_FILE, 'r') as fp:
-            body = fp.read()
-            self.QUERIES = json.loads(body)
+        self._load_queries()
+
+    def _load_queries(self):
+        """ Parse all source files and merge them into a single JSON """
+        extracted = []
+        for fname in NEO4J_QUERIES_FILES:
+            if not os.path.isfile(fname):
+                print('File "{}" not found. Skipping...'.format(fname))
+                continue
+            with open(fname, 'r') as fp:
+                body = fp.read()
+                temp = body.strip()[1:-1]
+                extracted.append(temp)
+        queries_str = "[%s]" % (",".join(extracted))
+        self.QUERIES = json.loads(queries_str)
 
     # ==========================================================================
     # UTILS
