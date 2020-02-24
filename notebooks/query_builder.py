@@ -130,6 +130,7 @@ class QueryBuilder(object):
         num_queries = len(queries)
         # For each selected query
         for counter, q in enumerate(queries, 1):
+            # Print query title
             self.printmd("--- \n## {}".format(self._print_header(q, counter, num_queries)))
             self.printmd("[Goto Top](#Queries-included-in-this-report)")
             # Parse optional dynamic parameters
@@ -142,7 +143,7 @@ class QueryBuilder(object):
             # Print result
             if res:
                 df = pandas.DataFrame(res, columns=q['result_headers'])
-                pandas.set_option('display.max_rows', 500)
+                pandas.set_option('display.max_rows', 5000)
                 pandas.set_option('display.max_colwidth', 0)
                 display(df)  # noqa: F821
             else:
