@@ -104,15 +104,16 @@
             "list"
         ],
         "description": "List of Groups an AWSPrincipal is member of",
-        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal)-[m:MEMBER_AWS_GROUP]->(g:AWSGroup) RETURN ",
-        "return": "a.name, a.id, p.name, p.userid, p.arn, g.name ORDER BY a.name, g.name",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal)-[m:MEMBER_AWS_GROUP]->(g:AWSGroup) WITH a, p, g, collect(distinct(g.name)) as groups RETURN ",
+        "return": "a.name, a.id, p.name, p.userid, p.arn, count(groups), collect(distinct(g.name)) ORDER BY a.name, count(groups) DESC",
         "result_headers": [
             "account_name",
             "account_id",
             "principal_name",
             "principal_id",
             "principal_arn",
-            "group_name"
+            "number_of_groups",
+            "groups"
         ]
     },
     {
@@ -683,7 +684,7 @@
         "return": "a1.name, a1.id, b1.id, b1.cidr_block, peer.connection_id, peer.status_code, b2.cidr_block, b2.id, a2.id, a2.name ORDER BY a1.name, a2.name",
         "result_headers": [
             "account1_name",
-            "account2_id",
+            "account1_id",
             "block1_id",
             "block1_cidr",
             "peering_id",
