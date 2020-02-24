@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 import os
 import sys
+import json
 import argparse
-import simplejson
 
-NEO4J_QUERIES_FILE = 'queries.json'
+# Add all source files from which to load queries
+NEO4J_QUERIES_FILES = [
+    'queries.json',
+]
 
 # ==============================================================================
 # UTILS
@@ -24,21 +27,28 @@ def parse_args():
     return args
 
 def read_queries():
-    if not os.path.isfile(NEO4J_QUERIES_FILE):
-        print('File "queries.json" not found. Exiting...')
-        sys.exit()
-    with open(NEO4J_QUERIES_FILE, 'r') as fp:
-        body = fp.read()
-    return simplejson.loads(body)
+    """ Parse all source files and merge them into a single JSON """
+    extracted = []
+    for fname in NEO4J_QUERIES_FILES:
+        if not os.path.isfile(fname):
+            print('File "{}" not found. Skipping...'.format(fname))
+            continue
+        with open(fname, 'r') as fp:
+            body = fp.read()
+            temp = body.strip()[1:-1]
+            extracted.append(temp)
+    queries_str = "[%s]" % (",".join(extracted))
+    return json.loads(queries_str)
 
 def get_all_tags(queries):
+    """ Returns a list of all tags specified within the source files """
     tags = []
     for q in queries:
         tags.extend(q['tags'])
     return sorted(list(set(tags)))
 
 def filter_by_tags(queries, tags):
-    # Returns all the queries which contain all the tags provided
+    """ Returns all the queries which contain all the tags provided """
     return [q for q in queries if all(elem in q['tags'] for elem in tags)]
 
 
@@ -70,7 +80,8 @@ if __name__ == '__main__':
     if tags:
         tags = tags.split(',')
         print("[+] Selected tags: {}".format(tags))
-        print("[+] Queries matching selected tags:")
         selected_queries = filter_by_tags(queries, tags)
-        for q in selected_queries:
-            print("\t[{}] {}".format(q['name'], q['description']))
+        number_of_queries = len(selected_queries)
+        print("[+] Queries matching selected tags ({}):".format(number_of_queries))
+        for idx, q in enumerate(selected_queries, 1):
+            print("\t[{}/{}][{}] {}".format(idx, number_of_queries, q['name'], q['description']))

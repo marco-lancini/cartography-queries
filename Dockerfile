@@ -3,8 +3,6 @@ FROM python:3.7-slim
 RUN addgroup --gid 11111 app
 RUN adduser --shell /bin/false --uid 11111 --ingroup app app
 
-RUN pip3 install --upgrade simplejson
-
 WORKDIR /app/
 COPY query_manager.py .
 COPY queries.json .
