@@ -799,7 +799,7 @@
         ],
         "description": "Which LoadBalancers are directly exposed to the internet?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancer{exposed_internet: true})-->(listener:ELBListener) WITH a, l, listener, collect(distinct listener.port) as ports RETURN ",
-        "return": "a.name, a.id, l.name, l.scheme, l.dnsname, count(ports), collect(distinct listener.port) ORDER BY count(ports) DESC",
+        "return": "a.name, a.id, l.name, l.scheme, l.dnsname, count(ports), collect(distinct listener.port) ORDER BY a.name, count(ports) DESC",
         "result_headers": [
             "account_name",
             "account_id",
