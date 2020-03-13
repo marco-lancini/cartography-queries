@@ -627,6 +627,25 @@
         ]
     },
     {
+        "name": "dynamo_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of DynamoDB Tables by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(d:DynamoDBTable) RETURN ",
+        "return": "a.name, a.id, d.name, d.id, d.region ORDER BY a.name, d.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "table_name",
+            "table_id",
+            "table_region"
+        ]
+    },
+    {
         "name": "dns_list",
         "tags": [
             "inventory",
