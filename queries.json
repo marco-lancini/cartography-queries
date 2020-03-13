@@ -646,6 +646,72 @@
         ]
     },
     {
+        "name": "elasticsearch_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of ESDomains by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(es:ESDomain) RETURN ",
+        "return": "a.name, a.id, es.id, es.arn, es.domainid, es.elasticsearch_version, es.exposed_internet, es.encryption_at_rest_options_enabled ORDER BY a.name, es.exposed_internet, es.encryption_at_rest_options_enabled",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "es_id",
+            "es_arn",
+            "es_domain",
+            "es_version",
+            "internet_exposed",
+            "encrypted_at_rest"
+        ]
+    },
+    {
+        "name": "elasticsearch_public",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "list",
+            "misconfig"
+        ],
+        "description": "Which ESDomains are directly exposed to the internet?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(es:ESDomain{exposed_internet: true}) RETURN ",
+        "return": "a.name, a.id, es.id, es.domainid, es.elasticsearch_version, es.exposed_internet, es.encryption_at_rest_options_enabled ORDER BY a.name, es.exposed_internet, es.encryption_at_rest_options_enabled",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "es_id",
+            "es_domain",
+            "es_version",
+            "internet_exposed",
+            "encrypted_at_rest"
+        ]
+    },
+    {
+        "name": "elasticsearch_unencrypted",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig"
+        ],
+        "description": "Which ESDomains have encryption turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(es:ESDomain{encryption_at_rest_options_enabled: false}) RETURN ",
+        "return": "a.name, a.id, es.id, es.domainid, es.elasticsearch_version, es.exposed_internet, es.encryption_at_rest_options_enabled ORDER BY a.name, es.exposed_internet, es.encryption_at_rest_options_enabled",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "es_id",
+            "es_domain",
+            "es_version",
+            "internet_exposed",
+            "encrypted_at_rest"
+        ]
+    },
+    {
         "name": "dns_list",
         "tags": [
             "inventory",
