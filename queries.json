@@ -1,5 +1,21 @@
 [
     {
+        "name": "aws_accounts",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws"
+        ],
+        "description": "List of AWSAccounts currently analysed",
+        "query": "MATCH (n:AWSAccount) RETURN ",
+        "return": "n.id, n.name",
+        "result_headers": [
+            "account_name",
+            "account_id"
+        ]
+    },
+    {
         "name": "iam_principal_list",
         "tags": [
             "inventory",
@@ -1055,7 +1071,8 @@
             "inventory",
             "cloud",
             "gcp",
-            "list"
+            "list",
+            "security"
         ],
         "description": "Full list of GCPProjects",
         "query": "MATCH (n:GCPProject) RETURN ",
