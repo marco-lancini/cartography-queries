@@ -11,8 +11,8 @@
         "query": "MATCH (n:AWSAccount) RETURN ",
         "return": "n.id, n.name",
         "result_headers": [
-            "account_name",
-            "account_id"
+            "account_id",
+            "account_name"
         ]
     },
     {
