@@ -253,6 +253,87 @@
         ]
     },
     {
+        "name": "eks_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "security"
+        ],
+        "description": "List of EKSClusters by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(c:EKSCluster) RETURN ",
+        "return": "a.name, a.id, c.name, c.region, c.status, c.version, c.platform_version, c.exposed_internet, c.endpoint, c.endpoint_public_access, c.audit_logging, c.rolearn ORDER BY a.name, c.region, c.state, c.exposed_internet",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_name",
+            "cluster_region",
+            "cluster_status",
+            "k8s_version",
+            "eks_version",
+            "exposed_internet",
+            "endpoint",
+            "endpoint_public_access",
+            "audit_logging",
+            "role"
+        ]
+    },
+    {
+        "name": "eks_public",
+        "tags": [
+            "cloud",
+            "aws",
+            "list",
+            "misconfig",
+            "security"
+        ],
+        "description": "List of EKSClusters by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(c:EKSCluster{exposed_internet: true}) RETURN ",
+        "return": "a.name, a.id, c.name, c.region, c.status, c.version, c.platform_version, c.exposed_internet, c.endpoint, c.endpoint_public_access, c.audit_logging, c.rolearn ORDER BY a.name, c.region, c.state, c.exposed_internet",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_name",
+            "cluster_region",
+            "cluster_status",
+            "k8s_version",
+            "eks_version",
+            "exposed_internet",
+            "endpoint",
+            "endpoint_public_access",
+            "audit_logging",
+            "role"
+        ]
+    },
+    {
+        "name": "eks_no_logging",
+        "tags": [
+            "cloud",
+            "aws",
+            "list",
+            "misconfig",
+            "security"
+        ],
+        "description": "List of EKSClusters by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(c:EKSCluster{audit_logging: false}) RETURN ",
+        "return": "a.name, a.id, c.name, c.region, c.status, c.version, c.platform_version, c.exposed_internet, c.endpoint, c.endpoint_public_access, c.audit_logging, c.rolearn ORDER BY a.name, c.region, c.state, c.exposed_internet",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_name",
+            "cluster_region",
+            "cluster_status",
+            "k8s_version",
+            "eks_version",
+            "exposed_internet",
+            "endpoint",
+            "endpoint_public_access",
+            "audit_logging",
+            "role"
+        ]
+    },
+    {
         "name": "ec2_list",
         "tags": [
             "inventory",
@@ -1120,6 +1201,168 @@
             "project_id",
             "project_name",
             "project_state"
+        ]
+    },
+    {
+        "name": "gcp_gke_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list",
+            "security"
+        ],
+        "description": "List of GKEClusters by GCPProject",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(c:GKECluster) RETURN ",
+        "return": "a.id, a.displayname, c.name, c.location, c.status, c.initial_version, c.current_master_version, c.exposed_internet, c.database_encryption, c.basic_auth, c.logging_service, c.monitoring_service, c.shielded_nodes, c.master_authorized_networks, c.private_nodes  ORDER BY a.id, c.location, c.state, c.exposed_internet",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "cluster_name",
+            "cluster_location",
+            "cluster_status",
+            "cluster_initial_version",
+            "cluster_master_version",
+            "exposed_internet",
+            "etcd_encryption",
+            "basic_auth",
+            "logging_service",
+            "monitoring_service",
+            "shielded_nodes",
+            "master_authorized_networks",
+            "private_nodes"
+        ]
+    },
+    {
+        "name": "gcp_gke_public",
+        "tags": [
+            "misonfig",
+            "cloud",
+            "gcp",
+            "security"
+        ],
+        "description": "Which GKEClusters are directly exposed to the internet?",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(c:GKECluster{exposed_internet: true}) RETURN ",
+        "return": "a.id, a.displayname, c.name, c.location, c.status, c.exposed_internet, c.database_encryption, c.basic_auth, c.logging_service, c.monitoring_service, c.master_authorized_networks, c.private_nodes ORDER BY a.id, c.location, c.state, c.exposed_internet",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "cluster_name",
+            "cluster_location",
+            "cluster_status",
+            "exposed_internet",
+            "etcd_encryption",
+            "basic_auth",
+            "logging_service",
+            "monitoring_service",
+            "master_authorized_networks",
+            "private_nodes"
+        ]
+    },
+    {
+        "name": "gcp_gke_no_logging",
+        "tags": [
+            "misonfig",
+            "cloud",
+            "gcp",
+            "security"
+        ],
+        "description": "Which GKEClusters have logging or monitoring disabled?",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(c:GKECluster) WHERE c.logging_service = 'none' OR c.logging_service is null OR c.monitoring_service = 'none' OR c.monitoring_service is null RETURN ",
+        "return": "a.id, a.displayname, c.name, c.location, c.status, c.exposed_internet, c.basic_auth, c.logging_service, c.monitoring_service, c.master_authorized_networks, c.private_nodes ORDER BY a.id, c.location, c.state, c.exposed_internet",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "cluster_name",
+            "cluster_location",
+            "cluster_status",
+            "exposed_internet",
+            "basic_auth",
+            "logging_service",
+            "monitoring_service",
+            "master_authorized_networks",
+            "private_nodes"
+        ]
+    },
+    {
+        "name": "gcp_gke_no_shielded_nodes",
+        "tags": [
+            "misonfig",
+            "cloud",
+            "gcp",
+            "security"
+        ],
+        "description": "Which GKEClusters do not use shielded nodes?",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(c:GKECluster) WHERE c.shielded_nodes = 'none' OR c.shielded_nodes is null RETURN ",
+        "return": "a.id, a.displayname, c.name, c.location, c.status, c.exposed_internet, c.basic_auth, c.logging_service, c.monitoring_service, c.master_authorized_networks, c.private_nodes ORDER BY a.id, c.location, c.state, c.exposed_internet",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "cluster_name",
+            "cluster_location",
+            "cluster_status",
+            "exposed_internet",
+            "basic_auth",
+            "logging_service",
+            "monitoring_service",
+            "master_authorized_networks",
+            "private_nodes"
+        ]
+    },
+    {
+        "name": "gcp_gke_basic_auth",
+        "tags": [
+            "misonfig",
+            "cloud",
+            "gcp",
+            "security"
+        ],
+        "description": "Which GKEClusters use basic auth?",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(c:GKECluster) WHERE c.basic_auth is not null RETURN ",
+        "return": "a.id, a.displayname, c.name, c.location, c.status, c.exposed_internet, c.basic_auth, c.masterauth_username, c.masterauth_password  ORDER BY a.id, c.location, c.state, c.exposed_internet",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "cluster_name",
+            "cluster_location",
+            "cluster_status",
+            "exposed_internet",
+            "basic_auth",
+            "masterauth_username",
+            "masterauth_password"
+        ]
+    },
+    {
+        "name": "gcp_gke_networking",
+        "tags": [
+            "networking",
+            "cloud",
+            "gcp",
+            "list"
+        ],
+        "description": "List of GKEClusters with networking information",
+        "query": "MATCH (a:GCPProject)-[RESOURCE]->(c:GKECluster) RETURN ",
+        "return": "a.id, a.displayname, c.name, c.location, c.status, c.initial_version, c.current_master_version, c.exposed_internet, c.master_authorized_networks, c.private_nodes, c.network, c.subnetwork, c.network_policy, c.private_endpoint_enabled, c.private_endpoint, c.public_endpoint, c.endpoint, c.cluster_ipv4cidr, c.services_ipv4cidr ORDER BY a.id, c.location, c.state, c.exposed_internet",
+        "result_headers": [
+            "project_id",
+            "project_name",
+            "cluster_name",
+            "cluster_location",
+            "cluster_status",
+            "cluster_initial_version",
+            "cluster_master_version",
+            "exposed_internet",
+            "master_authorized_networks",
+            "private_nodes",
+            "network",
+            "subnetwork",
+            "network_policy",
+            "private_endpoint_enabled",
+            "private_endpoint",
+            "public_endpoint",
+            "endpoint",
+            "cluster_ipv4cidr",
+            "services_ipv4cidr"
         ]
     },
     {
