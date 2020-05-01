@@ -364,7 +364,7 @@
             "list",
             "misconfig"
         ],
-        "description": "Which EC2 instances are directly exposed to the internet?",
+        "description": "Which EC2 instances are (directly or indirecly) exposed to the internet?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance{exposed_internet: true}) RETURN ",
         "return": "a.name, a.id, instance.instanceid, instance.state, instance.launchtime, instance.publicdnsname, instance.privateipaddress, instance.exposed_internet_type ORDER BY a.name, instance.state",
         "result_headers": [
@@ -375,6 +375,56 @@
             "launchtime",
             "publicdnsname",
             "private_ip",
+            "how_exposed"
+        ]
+    },
+    {
+        "name": "ec2_public_world",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list",
+            "misconfig"
+        ],
+        "description": "Which EC2 instances are exposed to the public internet (0.0.0.0/0)?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance{exposed_internet: true})-[:MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup)<-[:MEMBER_OF_EC2_SECURITY_GROUP]-(perm:IpPermissionInbound)<-[:MEMBER_OF_IP_RULE]-(rule:IpRange) WHERE rule.range='0.0.0.0/0' RETURN ",
+        "return": "a.name, a.id, instance.instanceid, instance.publicdnsname, sg.name, perm.protocol, perm.fromport, perm.toport, rule.range, instance.exposed_internet_type ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "publicdnsname",
+            "security_group_name",
+            "protocol",
+            "from_port",
+            "to_port",
+            "range",
+            "how_exposed"
+        ]
+    },
+    {
+        "name": "ec2_public_cidr",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list",
+            "misconfig"
+        ],
+        "description": "Which EC2 instances are exposed only to a specific CIDR?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance{exposed_internet: true})-[:MEMBER_OF_EC2_SECURITY_GROUP]->(sg:EC2SecurityGroup)<-[:MEMBER_OF_EC2_SECURITY_GROUP]-(perm:IpPermissionInbound)<-[:MEMBER_OF_IP_RULE]-(rule:IpRange) WHERE NOT rule.range='0.0.0.0/0' RETURN ",
+        "return": "a.name, a.id, instance.instanceid, instance.publicdnsname, sg.name, perm.protocol, perm.fromport, perm.toport, rule.range, instance.exposed_internet_type ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "publicdnsname",
+            "security_group_name",
+            "protocol",
+            "from_port",
+            "to_port",
+            "range",
             "how_exposed"
         ]
     },
