@@ -24,4 +24,8 @@ For simplicity, you can also directly use the [related Docker image](https://hub
 #### Jupyter Notebooks
 
 The `consumers/jupyter_notebooks` folder contains all the code needed to get you started with your own Jupyter reports for analysing Cartography data.
+
+See the [JUPYTER_SETUP.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/jupyter_notebooks/JUPYTER_SETUP.md) file for more information on the available notebooks.
+
 For detailed instructions on how to set them up, please refer to section "[Repeatability: Jupyter Notebooks](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography/#repeatability-jupyter-notebooks)" of the companion blog post.
+
