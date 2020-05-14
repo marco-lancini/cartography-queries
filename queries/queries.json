@@ -16,6 +16,23 @@
         ]
     },
     {
+        "name": "aws_accounts_autodiscovered",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "List of AWSAccounts autodiscovered (and not currently analysed)",
+        "query": "MATCH (a:AWSAccount)-[r:RESOURCE]-() WITH a, count(r) as links WHERE links = 1 RETURN ",
+        "return": "a.id, a.name",
+        "result_headers": [
+            "account_id",
+            "account_name"
+        ]
+    },
+    {
         "name": "iam_principal_list",
         "tags": [
             "inventory",
