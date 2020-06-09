@@ -7,6 +7,44 @@ This is the companion repo for the [Mapping Moving Clouds: how to stay on top of
 The file `queries/queries.json` contains a set of custom queries specifically created for analyzing data collected by Cartography, and is structured as a list of dictionaries,
 where each dictionary represents an annotated query (enriched with metadata).
 
+```json
+[
+    {
+        "name": "ec2_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EC2 instances by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance) RETURN ",
+        "return": "a.name, a.id, instance.instanceid, instance.state, instance.exposed_internet, instance.launchtime, instance.region ORDER BY a.name, instance.state, instance.exposed_internet",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "state",
+            "internet_exposed",
+            "launchtime",
+            "region"
+        ]
+    },
+    ...
+]
+```
+As shown in the snippet above, each query has the following fields:
+- `name`: the short name for the query
+- `tags`: for ease of filtering. Usually it contains:
+  - the source to target (e.g., `aws`, `gcp`, `k8s`)
+  - any kind of query (e.g., `security`, `inventory`, `networking`)
+  - any subtype (`misconfig`, `anomaly`, `drift`, `list`) that can assist in further filtering the queries
+- `description`: a human readable description of the query
+- `query`: the actual Cypher query that is going to be run against Neo4j
+  - ⚠️ it is important that both AWSAccounts and GCPProjects are assigned to a variable called `a`
+- `return`: the fields to select from the query
+- `result_headers`: human readable list of the fields that are going to be returned by `query`
+
 
 ## Query Manager
 The query manager (`queries/query_manager.py`) script is a quick command line option for inspecting/filtering Cartography queries (without actually running them).
