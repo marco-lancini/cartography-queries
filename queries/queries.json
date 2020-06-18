@@ -1235,6 +1235,23 @@
         ]
     },
     {
+        "name": "gcp_project_list_failing",
+        "tags": [
+            "inventory",
+            "cloud",
+            "gcp",
+            "list",
+            "security"
+        ],
+        "description": "Full list of GCPProjects",
+        "query": "MATCH (a:GCPProject)-[r:RESOURCE]-() WITH a, count(r) as links WHERE links = 1 RETURN ",
+        "return": "a.id, a.displayname ORDER BY a.displayname",
+        "result_headers": [
+            "project_id",
+            "project_name"
+        ]
+    },
+    {
         "name": "gcp_projects_by_org",
         "tags": [
             "inventory",
