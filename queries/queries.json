@@ -1243,7 +1243,7 @@
             "list",
             "security"
         ],
-        "description": "Full list of GCPProjects",
+        "description": "List of GCPProjects which cannot be analysed by Cartography (lack of permissions)",
         "query": "MATCH (a:GCPProject)-[r:RESOURCE]-() WITH a, count(r) as links WHERE links = 1 RETURN ",
         "return": "a.id, a.displayname ORDER BY a.displayname",
         "result_headers": [
