@@ -878,6 +878,95 @@
         ]
     },
     {
+        "name": "lambda_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of Lambda by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:AWSLambda) RETURN ",
+        "return": "a.name, a.id, l.name, l.description, l.runtime, l.modifieddate ORDER BY a.name, l.runtime",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "name",
+            "description",
+            "runtime",
+            "modified_date"
+        ]
+    },
+    {
+        "name": "transit_gateway_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of AWSTransitGateway by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(t:AWSTransitGateway) RETURN ",
+        "return": "a.name, a.id, t.arn, t.description, t.state, t.owner_id",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "arn",
+            "description",
+            "state",
+            "owner_id"
+        ]
+    },
+    {
+        "name": "redshift_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of RedshiftClusters by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:RedshiftCluster) RETURN ",
+        "return": "a.name, a.id, r.arn, r.cluster_status, r.number_of_nodes, r.publicly_accessible, r.endpoint_address, r.endpoint_port, r.db_name, r.master_username",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "arn",
+            "status",
+            "number_of_nodes",
+            "publicly_accessible",
+            "endpoint_address",
+            "endpoint_port",
+            "db_name",
+            "master_username"
+        ]
+    },
+    {
+        "name": "redshift_public",
+        "tags": [
+            "cloud",
+            "aws",
+            "list",
+            "misconfig",
+            "security"
+        ],
+        "description": "Which RedshiftClusters are directly exposed to the internet?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:RedshiftCluster{publicly_accessible: true}) RETURN ",
+        "return": "a.name, a.id, r.arn, r.cluster_status, r.number_of_nodes, r.publicly_accessible, r.endpoint_address, r.endpoint_port, r.db_name, r.master_username",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "arn",
+            "status",
+            "number_of_nodes",
+            "publicly_accessible",
+            "endpoint_address",
+            "endpoint_port",
+            "db_name",
+            "master_username"
+        ]
+    },
+    {
         "name": "dns_list",
         "tags": [
             "inventory",
