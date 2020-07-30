@@ -1,0 +1,4 @@
+jupyterlab==2.1.5
+voila==0.1.21
+neo4j==1.7.6
+pandas==1.0.3
