@@ -1573,7 +1573,7 @@
         ],
         "description": "List of GCPInstances by GCPProject",
         "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance) RETURN ",
-        "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.internet_exposed ORDER BY a.id, instance.status",
+        "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, instance.status",
         "result_headers": [
             "project_id",
             "project_name",
@@ -1593,7 +1593,7 @@
         ],
         "description": "List of GCPInstances by GCPVpc",
         "query": "MATCH (a:GCPProject)-[:RESOURCE]->(v:GCPVpc)<-[:MEMBER_OF_GCP_VPC]-(instance:GCPInstance) RETURN ",
-        "return": "a.id, a.displayname, v.id, instance.instancename, instance.status, instance.zone_name, instance.internet_exposed ORDER BY a.id, v.id, instance.status",
+        "return": "a.id, a.displayname, v.id, instance.instancename, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, v.id, instance.status",
         "result_headers": [
             "project_id",
             "project_name",
@@ -1613,8 +1613,8 @@
             "misconfig"
         ],
         "description": "Which GCPInstances are directly exposed to the internet?",
-        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance{internet_exposed: true}) RETURN ",
-        "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.internet_exposed ORDER BY a.id, instance.status",
+        "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance{exposed_internet: true}) RETURN ",
+        "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, instance.status",
         "result_headers": [
             "project_id",
             "project_name",
