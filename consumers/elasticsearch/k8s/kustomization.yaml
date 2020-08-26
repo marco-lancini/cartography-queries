@@ -1,0 +1,7 @@
+---
+resources:
+  - ingestor-cronjob.yaml
+configMapGenerator:
+  - name: cartography-elastic-index-configmap
+    files:
+      - es-index.json
