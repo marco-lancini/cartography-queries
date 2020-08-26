@@ -158,5 +158,4 @@ def main():
 
 
 if __name__ == '__main__':
-    parse_flags(sys.argv)
     main()
