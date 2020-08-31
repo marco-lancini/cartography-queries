@@ -1,0 +1,72 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cartography-elastic-ingestor
+  labels:
+    app: cartography
+    component: cartography-elastic-ingestor
+spec:
+  schedule: "0 7 * * *" # Run every day at 7am
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 5
+      template:
+        metadata:
+          labels:
+            app: cartography
+            component: cartography-elastic-ingestor
+        spec:
+          restartPolicy: Never
+          securityContext:
+            fsGroup: 1000
+            runAsNonRoot: true
+          containers:
+            - name: cartography-elastic-ingestor
+              image: marcolancini/cartography_elastic_ingestor:latest
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+              env:
+                - name: ELASTIC_URL
+                  value: "elastic.example.com" # CHANGE THIS
+                - name: ELASTIC_INDEX
+                  value: "cartography"
+                - name: ELASTIC_DRY_RUN
+                  value: "False"
+                - name: NEO4J_URI
+                  value: "bolt://neo4j-bolt-service:7687"
+                - name: NEO4J_USER
+                  value: "neo4j"
+                - name: ES_INDEX_SPEC
+                  value: "/opt/es-index/es-index.json"
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  # From Vault
+                  #   ELASTICSEARCH_USER
+                  #   ELASTICSEARCH_PASSWORD
+                  #   NEO4J_SECRETS_PASSWORD
+
+                  # Run ingestor
+                  python3 /app/ingestor.py
+              volumeMounts:
+                - name: cartography-elastic-configmap-volume
+                  mountPath: /opt/es-index
+                  readOnly: true
+                - name: elasticsearch-credentials-volume
+                  mountPath: /etc/vault/secret/cartography-es-writer
+                  readOnly: true
+                - name: neo4j-password-secrets-volume
+                  mountPath: /etc/vault/secret/neo4j-password-secrets
+                  readOnly: true
+          volumes:
+            - name: elasticsearch-credentials-volume
+              emptyDir: {}
+            - name: neo4j-password-secrets-volume
+              emptyDir: {}
+            - name: cartography-elastic-configmap-volume
+              configMap:
+                name: cartography-elastic-index-configmap
