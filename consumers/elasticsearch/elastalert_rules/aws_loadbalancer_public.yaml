@@ -31,7 +31,7 @@ alert_text_args:
 alert_text_type: alert_text_only
 alert:
   - slack:
-      slack_webhook_url: __slack_webhook_url.secops-notifications__
+      slack_webhook_url: __slack_webhook_url.security-notifications__
   - jira:
       jira_server: https://jira.server.com
       jira_project: PROJECT
