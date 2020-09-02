@@ -1,0 +1,36 @@
+name: "[Cartography] New GCP Project Detected"
+description: "New GCP Project Detected."
+use_ssl: True
+
+# Query:
+#   metadata.query_name:"gcp_project_list" AND NOT n.projectid:sys-*
+index: transform-gcp-project-list-cartography-max-min
+type: any
+filter:
+  - query_string:
+      query: "_type:_doc"
+num_events: 1
+timestamp_field: "@timestamp.min"
+timeframe:
+  hours: 1
+realert:
+  hours: 50
+query_key:
+  - "n.projectid"
+  - "n.projectnumber"
+
+alert_text: |
+  Elastalert Alert: Cartography detected new values in the query gcp_project_list. Project: {1} [{0}].
+alert_text_args:
+  - "n.projectid"
+  - "n.projectnumber"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.secops-notifications__
+  - jira:
+      jira_server: https://jira.server.com
+      jira_project: PROJECT
+      jira_components: COMPONENT
+      jira_issuetype: Vulnerability
+      jira_account_file: jira-credentials.yaml
