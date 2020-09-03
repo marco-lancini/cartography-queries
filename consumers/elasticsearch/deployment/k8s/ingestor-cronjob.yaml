@@ -30,7 +30,7 @@ spec:
                 runAsGroup: 1000
               env:
                 - name: ELASTIC_URL
-                  value: "elastic.example.com" # CHANGE THIS
+                  value: "elastic.example.com"
                 - name: ELASTIC_INDEX
                   value: "cartography"
                 - name: ELASTIC_DRY_RUN
