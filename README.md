@@ -1,7 +1,6 @@
 # Cartography Queries
 
-This is the companion repo for the [Mapping Moving Clouds: how to stay on top of your ephemeral environments with Cartography](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography) blog post.
-
+This is the companion repo for the "[Continuous Visibility into Ephemeral Cloud Environments](https://www.marcolancini.it/continuous-cloud-visibility/)" series.
 
 ## Custom Queries
 The file `queries/queries.json` contains a set of custom queries specifically created for analyzing data collected by Cartography, and is structured as a list of dictionaries,
@@ -59,10 +58,14 @@ For simplicity, you can also directly use the [related Docker image](https://hub
 
 ## Consumers
 
-#### Jupyter Notebooks
+#### Elasticsearch
+The `consumers/elasticsearch` folder contains all the code needed to get you started with integrating Elasticsearch with Cartography data.
 
+For more information, please refer to the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/elasticsearch/README.md) file in that folder, and the "[Tracking Moving Clouds: How to continuously track cloud assets with Cartography](https://www.marcolancini.it/2020/blog-tracking-moving-clouds-with-cartography)" blog post.
+
+#### Jupyter Notebooks
 The `consumers/jupyter_notebooks` folder contains all the code needed to get you started with your own Jupyter reports for analysing Cartography data.
 
 See the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/jupyter_notebooks/README.md) file in that folder for more information on the available notebooks.
 
-For detailed instructions on how to set them up, please refer to section "[Repeatability: Jupyter Notebooks](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography/#repeatability-jupyter-notebooks)" of the companion blog post.
+For detailed instructions on how to set them up, please refer to section "[Repeatability: Jupyter Notebooks](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography/#repeatability-jupyter-notebooks)" of the "[Mapping Moving Clouds: how to stay on top of your ephemeral environments with Cartography](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography)" blog post.
