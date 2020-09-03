@@ -1,0 +1,84 @@
+{
+  "id": "transform-gcp-project-list-cartography-max-min",
+  "source": {
+    "index": [
+      "short-term-cartography-*"
+    ],
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "bool": {
+              "should": [
+                {
+                  "match_phrase": {
+                    "metadata.query_name": "gcp_project_list"
+                  }
+                }
+              ],
+              "minimum_should_match": 1
+            }
+          },
+          {
+            "bool": {
+              "must_not": {
+                "bool": {
+                  "should": [
+                    {
+                      "query_string": {
+                        "fields": [
+                          "n.projectid"
+                        ],
+                        "query": "sys\\-*"
+                      }
+                    }
+                  ],
+                  "minimum_should_match": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "dest": {
+    "index": "transform-gcp-project-list-cartography-max-min"
+  },
+  "sync": {
+    "time": {
+      "field": "@timestamp",
+      "delay": "600s"
+    }
+  },
+  "pivot": {
+    "group_by": {
+      "n.projectid": {
+        "terms": {
+          "field": "n.projectid"
+        }
+      },
+      "n.projectnumber": {
+        "terms": {
+          "field": "n.projectnumber"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      }
+    }
+  },
+  "description": "transform-gcp-project-list-cartography-max-min",
+  "settings": {},
+  "version": "7.6.0",
+  "create_time": 1595859512490
+}

@@ -1,0 +1,84 @@
+{
+  "id": "transform-ec2-public-world-cartography-max-min",
+  "source": {
+    "index": [
+      "short-term-cartography-*"
+    ],
+    "query": {
+      "bool": {
+        "should": [
+          {
+            "match_phrase": {
+              "metadata.query_name": "ec2_public_world"
+            }
+          }
+        ],
+        "minimum_should_match": 1
+      }
+    }
+  },
+  "dest": {
+    "index": "transform-ec2-public-world-cartography-max-min"
+  },
+  "sync": {
+    "time": {
+      "field": "@timestamp",
+      "delay": "600s"
+    }
+  },
+  "pivot": {
+    "group_by": {
+      "a.id": {
+        "terms": {
+          "field": "a.id"
+        }
+      },
+      "a.name": {
+        "terms": {
+          "field": "a.name"
+        }
+      },
+      "instance.instanceid": {
+        "terms": {
+          "field": "instance.instanceid"
+        }
+      },
+      "instance.publicdnsname": {
+        "terms": {
+          "field": "instance.publicdnsname"
+        }
+      },
+      "rule.range": {
+        "terms": {
+          "field": "rule.range"
+        }
+      },
+      "sg.id": {
+        "terms": {
+          "field": "sg.id"
+        }
+      },
+      "sg.name": {
+        "terms": {
+          "field": "sg.name"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      }
+    }
+  },
+  "description": "transform-ec2-public-world-cartography-max-min",
+  "settings": {},
+  "version": "7.6.0",
+  "create_time": 1596108989780
+}

@@ -1,0 +1,69 @@
+{
+  "id": "transform-s3-anonymous-cartography-max-min",
+  "source": {
+    "index": [
+      "short-term-cartography-*"
+    ],
+    "query": {
+      "bool": {
+        "should": [
+          {
+            "match": {
+              "metadata.query_name": "s3_anonymous"
+            }
+          }
+        ],
+        "minimum_should_match": 1
+      }
+    }
+  },
+  "dest": {
+    "index": "transform-s3-anonymous-cartography-max-min"
+  },
+  "sync": {
+    "time": {
+      "field": "@timestamp",
+      "delay": "600s"
+    }
+  },
+  "pivot": {
+    "group_by": {
+      "a.id": {
+        "terms": {
+          "field": "a.id"
+        }
+      },
+      "a.name": {
+        "terms": {
+          "field": "a.name"
+        }
+      },
+      "s.name": {
+        "terms": {
+          "field": "s.name"
+        }
+      },
+      "s.anonymous_actions": {
+        "terms": {
+          "field": "s.anonymous_actions"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      }
+    }
+  },
+  "description": "transform-s3-anonymous-cartography-max-min",
+  "settings": {},
+  "version": "7.6.0",
+  "create_time": 1596190037182
+}

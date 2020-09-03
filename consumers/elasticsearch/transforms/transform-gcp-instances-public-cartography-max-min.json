@@ -1,0 +1,54 @@
+{
+  "id": "transform-gcp-instances-public-cartography-max-min",
+  "source": {
+    "index": [
+      "short-term-cartography-*"
+    ],
+    "query": {
+      "multi_match": {
+        "type": "best_fields",
+        "query": "metadata.query_name.search",
+        "lenient": true
+      }
+    }
+  },
+  "dest": {
+    "index": "transform-gcp-instances-public-cartography-max-min"
+  },
+  "sync": {
+    "time": {
+      "field": "@timestamp",
+      "delay": "600s"
+    }
+  },
+  "pivot": {
+    "group_by": {
+      "a.id": {
+        "terms": {
+          "field": "a.id"
+        }
+      },
+      "instance.instancename": {
+        "terms": {
+          "field": "instance.instancename"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      }
+    }
+  },
+  "description": "transform-gcp-instances-public-cartography-max-min",
+  "settings": {},
+  "version": "7.6.0",
+  "create_time": 1595864113713
+}

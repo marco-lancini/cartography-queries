@@ -1,0 +1,69 @@
+{
+  "id": "transform-ec2-keypair-list-cartography-max-min",
+  "source": {
+    "index": [
+      "short-term-cartography-*"
+    ],
+    "query": {
+      "bool": {
+        "should": [
+          {
+            "match_phrase": {
+              "metadata.query_name": "ec2_keypair_list"
+            }
+          }
+        ],
+        "minimum_should_match": 1
+      }
+    }
+  },
+  "dest": {
+    "index": "transform-ec2-keypair-list-cartography-max-min"
+  },
+  "sync": {
+    "time": {
+      "field": "@timestamp",
+      "delay": "600s"
+    }
+  },
+  "pivot": {
+    "group_by": {
+      "a.id": {
+        "terms": {
+          "field": "a.id"
+        }
+      },
+      "a.name": {
+        "terms": {
+          "field": "a.name"
+        }
+      },
+      "k.id": {
+        "terms": {
+          "field": "k.id"
+        }
+      },
+      "k.keyname": {
+        "terms": {
+          "field": "k.keyname"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      }
+    }
+  },
+  "description": "transform-ec2-keypair-list-cartography-max-min",
+  "settings": {},
+  "version": "7.6.0",
+  "create_time": 1596108480106
+}
