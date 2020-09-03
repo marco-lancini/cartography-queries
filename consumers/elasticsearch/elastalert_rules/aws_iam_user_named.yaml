@@ -1,0 +1,39 @@
+name: "[Cartography] New IAM User Detected"
+description: "New named IAM user."
+use_ssl: True
+
+# Query:
+#   metadata.query_name:"iam_user_named"
+index: transform-iam-user-named-cartography-max-min
+type: any
+filter:
+  - query_string:
+      query: "_type:_doc"
+num_events: 1
+timestamp_field: "@timestamp.min"
+timeframe:
+  hours: 1
+realert:
+  hours: 50
+query_key:
+  - "a.id"
+  - "a.name"
+  - "p.name"
+
+alert_text: |
+  Elastalert Alert: Cartography detected new values in the query iam_accesskey_principal. Account: {1} [{0}] - Principal name: {2}.
+
+alert_text_args:
+  - "a.id"
+  - "a.name"
+  - "p.name"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__
+  - jira:
+      jira_server: https://jira.server.com
+      jira_project: PROJECT
+      jira_components: COMPONENT
+      jira_issuetype: Vulnerability
+      jira_account_file: jira-credentials.yaml

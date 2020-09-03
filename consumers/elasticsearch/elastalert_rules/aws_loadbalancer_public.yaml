@@ -1,0 +1,40 @@
+name: "[Cartography] New LoadBalancer publicly exposed"
+description: "A LoadBalancer has been made public."
+use_ssl: True
+
+# Query:
+#   (metadata.query_name: "loadbalancer_list" or metadata.query_name: "loadbalancer_v2_list") and l.exposed_internet: true
+index: transform-loadbalancer-public-cartography-max-min
+type: any
+filter:
+  - query_string:
+      query: "_type:_doc"
+num_events: 1
+timestamp_field: "@timestamp.min"
+timeframe:
+  hours: 1
+realert:
+  hours: 50
+query_key:
+  - "a.id"
+  - "a.name"
+  - "l.dnsname"
+  - "l.scheme"
+
+alert_text: |
+  Elastalert Alert: Cartography detected a new public LoadBalancer. Account: {1} [{0}] - ELB DNS name: {2} - Scheme: {3}.
+alert_text_args:
+  - "a.id"
+  - "a.name"
+  - "l.dnsname"
+  - "l.scheme"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__
+  - jira:
+      jira_server: https://jira.server.com
+      jira_project: PROJECT
+      jira_components: COMPONENT
+      jira_issuetype: Vulnerability
+      jira_account_file: jira-credentials.yaml

@@ -1,0 +1,39 @@
+name: "[Cartography] New Public EKS Cluster Detected"
+description: "An EKS cluster has been made public."
+use_ssl: True
+
+# Query:
+#   metadata.query_name :"eks_list" and c.exposed_internet:true
+index: transform-eks-public-cartography-max-min
+type: any
+filter:
+  - query_string:
+      query: "_type:_doc"
+num_events: 1
+timestamp_field: "@timestamp.min"
+timeframe:
+  hours: 1
+realert:
+  hours: 50
+query_key:
+  - "a.id"
+  - "a.name"
+  - "c.name"
+
+alert_text: |
+  Elastalert Alert: Cartography detected new values in the query eks_public. Account: {1} [{0}] - Cluster name: {2}.
+
+alert_text_args:
+  - "a.id"
+  - "a.name"
+  - "c.name"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__
+  - jira:
+      jira_server: https://jira.server.com
+      jira_project: PROJECT
+      jira_components: COMPONENT
+      jira_issuetype: Vulnerability
+      jira_account_file: jira-credentials.yaml

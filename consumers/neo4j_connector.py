@@ -73,7 +73,7 @@ class Neo4jConnector(object):
     def _load_queries(self):
         extracted = []
         for fname in NEO4J_QUERIES_FILES:
-            path = fname
+            path = os.path.join("/", fname)
             if not os.path.isfile(path):
                 logger.warning('File "{}" not found. Skipping...'.format(path))
                 continue

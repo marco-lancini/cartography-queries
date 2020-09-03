@@ -1,0 +1,46 @@
+name: "[Cartography] New EC2 publicly exposed (0.0.0.0/0)"
+description: "An EC2 instance has been made public."
+use_ssl: True
+
+# Query:
+#   metadata.query_name: ec2_public_world
+index: transform-ec2-public-world-cartography-max-min
+type: any
+filter:
+  - query_string:
+      query: "_type:_doc"
+num_events: 1
+timestamp_field: "@timestamp.min"
+timeframe:
+  hours: 1
+realert:
+  hours: 50
+query_key:
+  - "a.id"
+  - "a.name"
+  - "instance.instanceid"
+  - "instance.publicdnsname"
+  - "rule.range"
+  - "sg.id"
+  - "sg.name"
+
+alert_text: |
+  Elastalert Alert: Cartography detected new values in the query ec2_public_world. Account: {1} [{0}] - Public DNS name: {3} - SG name: {6}.
+alert_text_args:
+  - "a.id"
+  - "a.name"
+  - "instance.instanceid"
+  - "instance.publicdnsname"
+  - "rule.range"
+  - "sg.id"
+  - "sg.name"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__
+  - jira:
+      jira_server: https://jira.server.com
+      jira_project: PROJECT
+      jira_components: COMPONENT
+      jira_issuetype: Vulnerability
+      jira_account_file: jira-credentials.yaml

@@ -1,0 +1,26 @@
+name: "New AWS Account Detected"
+description: "Alert when Cartography autodetects new AWS accounts we were unaware of."
+use_ssl: True
+
+timestamp_type: unix_ms
+index: cartography-*
+type: any
+filter:
+  - query_string:
+      query: 'metadata.query_name:"aws_accounts_autodiscovered"'
+query_key:
+  - "a.id"
+  - "a.name"
+num_events: 1
+timeframe:
+  hours: 1
+realert:
+  hours: 4
+
+alert_text_args:
+  - "a.id"
+  - "a.name"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__

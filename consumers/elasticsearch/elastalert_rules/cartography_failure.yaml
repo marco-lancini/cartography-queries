@@ -1,0 +1,26 @@
+name: "cartography_failure"
+description: "Alert if cartography-* entries fall below `threshold` entries in `timeframe`"
+use_ssl: True
+
+timestamp_type: unix_ms
+index: cartography-*
+type: flatline
+threshold: 200
+timeframe:
+  hours: 25
+realert:
+  days: 1
+use_count_query: True
+doc_type: "_doc"
+query_delay:
+  minutes: 10
+
+alert_text: "Elastalert Alert: Fewer than {0} events in index {1} over {2} (h:mm:ss)"
+alert_text_args:
+  - threshold
+  - index
+  - timeframe
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__

@@ -1,0 +1,36 @@
+name: "[Cartography] New Public GKE Cluster Detected"
+description: "A GKE cluster has been made public."
+use_ssl: True
+
+# Query:
+#   metadata.query_name:"gcp_gke_list" AND c.exposed_internet:true
+index: transform-gcp-gke-public-cartography-max-min
+type: any
+filter:
+  - query_string:
+      query: "_type:_doc"
+num_events: 1
+timestamp_field: "@timestamp.min"
+timeframe:
+  hours: 1
+realert:
+  hours: 50
+query_key:
+  - "a.id"
+  - "c.name"
+
+alert_text: |
+  Elastalert Alert: Cartography detected new values in the query gcp_gke_public. Project: {0} - Cluster: {1}.
+alert_text_args:
+  - "a.id"
+  - "c.name"
+alert_text_type: alert_text_only
+alert:
+  - slack:
+      slack_webhook_url: __slack_webhook_url.security-notifications__
+  - jira:
+      jira_server: https://jira.server.com
+      jira_project: PROJECT
+      jira_components: COMPONENT
+      jira_issuetype: Vulnerability
+      jira_account_file: jira-credentials.yaml
