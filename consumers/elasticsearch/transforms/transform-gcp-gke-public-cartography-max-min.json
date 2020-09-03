@@ -1,9 +1,7 @@
 {
   "id": "transform-gcp-gke-public-cartography-max-min",
   "source": {
-    "index": [
-      "short-term-cartography-*"
-    ],
+    "index": ["short-term-cartography-*"],
     "query": {
       "bool": {
         "filter": [

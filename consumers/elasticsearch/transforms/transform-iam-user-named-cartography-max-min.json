@@ -1,9 +1,7 @@
 {
   "id": "transform-iam-user-named-cartography-max-min",
   "source": {
-    "index": [
-      "short-term-cartography-*"
-    ],
+    "index": ["short-term-cartography-*"],
     "query": {
       "bool": {
         "filter": [

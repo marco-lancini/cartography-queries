@@ -1,9 +1,7 @@
 {
   "id": "transform-gcp-project-list-cartography-max-min",
   "source": {
-    "index": [
-      "short-term-cartography-*"
-    ],
+    "index": ["short-term-cartography-*"],
     "query": {
       "bool": {
         "filter": [
@@ -26,9 +24,7 @@
                   "should": [
                     {
                       "query_string": {
-                        "fields": [
-                          "n.projectid"
-                        ],
+                        "fields": ["n.projectid"],
                         "query": "sys\\-*"
                       }
                     }

@@ -1,9 +1,7 @@
 {
   "id": "transform-s3-anonymous-cartography-max-min",
   "source": {
-    "index": [
-      "short-term-cartography-*"
-    ],
+    "index": ["short-term-cartography-*"],
     "query": {
       "bool": {
         "should": [

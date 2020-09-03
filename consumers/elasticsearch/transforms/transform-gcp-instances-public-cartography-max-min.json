@@ -1,9 +1,7 @@
 {
   "id": "transform-gcp-instances-public-cartography-max-min",
   "source": {
-    "index": [
-      "short-term-cartography-*"
-    ],
+    "index": ["short-term-cartography-*"],
     "query": {
       "multi_match": {
         "type": "best_fields",
