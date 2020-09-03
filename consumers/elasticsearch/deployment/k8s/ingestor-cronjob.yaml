@@ -7,7 +7,7 @@ metadata:
     app: cartography
     component: cartography-elastic-ingestor
 spec:
-  schedule: "0 7 * * *" # Run every day at 7am
+  schedule: '0 7 * * *' # Run every day at 7am
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -30,20 +30,20 @@ spec:
                 runAsGroup: 1000
               env:
                 - name: ELASTIC_URL
-                  value: "elastic.example.com"
+                  value: 'elastic.example.com'
                 - name: ELASTIC_INDEX
-                  value: "cartography"
+                  value: 'cartography'
                 - name: ELASTIC_DRY_RUN
-                  value: "False"
+                  value: 'False'
                 - name: NEO4J_URI
-                  value: "bolt://neo4j-bolt-service:7687"
+                  value: 'bolt://neo4j-bolt-service:7687'
                 - name: NEO4J_USER
-                  value: "neo4j"
+                  value: 'neo4j'
                 - name: ES_INDEX_SPEC
-                  value: "/opt/es-index/es-index.json"
+                  value: '/opt/es-index/es-index.json'
               command:
-                - "/bin/sh"
-                - "-c"
+                - '/bin/sh'
+                - '-c'
                 - |
                   # From Vault
                   #   ELASTICSEARCH_USER
