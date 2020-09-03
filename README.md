@@ -3,6 +3,7 @@
 This is the companion repo for the "[Continuous Visibility into Ephemeral Cloud Environments](https://www.marcolancini.it/continuous-cloud-visibility/)" series.
 
 ## Custom Queries
+
 The file `queries/queries.json` contains a set of custom queries specifically created for analyzing data collected by Cartography, and is structured as a list of dictionaries,
 where each dictionary represents an annotated query (enriched with metadata).
 
@@ -32,7 +33,9 @@ where each dictionary represents an annotated query (enriched with metadata).
     ...
 ]
 ```
+
 As shown in the snippet above, each query has the following fields:
+
 - `name`: the short name for the query
 - `tags`: for ease of filtering. Usually it contains:
   - the source to target (e.g., `aws`, `gcp`, `k8s`)
@@ -44,8 +47,8 @@ As shown in the snippet above, each query has the following fields:
 - `return`: the fields to select from the query
 - `result_headers`: human readable list of the fields that are going to be returned by `query`
 
-
 ## Query Manager
+
 The query manager (`queries/query_manager.py`) script is a quick command line option for inspecting/filtering Cartography queries (without actually running them).
 For simplicity, you can also directly use the [related Docker image](https://hub.docker.com/r/marcolancini/cartography_queries) created with this `Dockerfile`:
 
@@ -55,15 +58,16 @@ For simplicity, you can also directly use the [related Docker image](https://hub
 | `docker run --rm marcolancini/cartography_queries:latest --get-all-tags`      | List all available tags                                              |
 | `docker run --rm marcolancini/cartography_queries:latest --tags=aws,security` | List queries filtered by tags (`aws` and `security` in this example) |
 
-
 ## Consumers
 
 #### Elasticsearch
+
 The `consumers/elasticsearch` folder contains all the code needed to get you started with integrating Elasticsearch with Cartography data.
 
 For more information, please refer to the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/elasticsearch/README.md) file in that folder, and the "[Tracking Moving Clouds: How to continuously track cloud assets with Cartography](https://www.marcolancini.it/2020/blog-tracking-moving-clouds-with-cartography)" blog post.
 
 #### Jupyter Notebooks
+
 The `consumers/jupyter_notebooks` folder contains all the code needed to get you started with your own Jupyter reports for analysing Cartography data.
 
 See the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/jupyter_notebooks/README.md) file in that folder for more information on the available notebooks.
