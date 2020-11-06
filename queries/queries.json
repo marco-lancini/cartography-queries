@@ -270,6 +270,25 @@
         ]
     },
     {
+        "name": "iam_permissions_admin",
+        "tags": [
+            "security",
+            "inventory",
+            "cloud",
+            "aws",
+            "drift"
+        ],
+        "description": "Which AWSPrincipals have root-like privileges?",
+        "query": "MATCH (stat:AWSPolicyStatement)--(policy:AWSPolicy)--(p:AWSPrincipal)<-[:RESOURCE]-(a:AWSAccount) WHERE stat.effect = 'Allow' AND any(x IN stat.resource WHERE x='*') AND any(x IN stat.action WHERE x='*') RETURN ",
+        "return": "a.name, a.id, p.name, policy.name ORDER BY a.name, p.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "principal_name",
+            "policy_name"
+        ]
+    },
+    {
         "name": "eks_list",
         "tags": [
             "inventory",
