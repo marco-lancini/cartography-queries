@@ -1,10 +1,10 @@
-name: "[Cartography] New IAM User Detected"
-description: "New named IAM user."
+name: "[Cartography] New Principal with Admin Permissions Detected"
+description: "A new Principal with root-like permissions has been detected."
 use_ssl: True
 
 # Query:
-#   metadata.query_name:"iam_user_named"
-index: transform-iam-user-named-cartography-max-min
+#   metadata.query_name:"iam_permissions_admin"
+index: transform-iam-permissions-admin-cartography-max-min
 type: any
 filter:
   - query_string:
@@ -19,13 +19,15 @@ query_key:
   - "a.id"
   - "a.name"
   - "p.name"
+  - "policy.name"
 
 alert_text: |
-  Elastalert Alert: Cartography detected new values in the query iam_user_named. Account: {1} [{0}] - Principal name: {2}.
+  Elastalert Alert:  Cartography detected new values in the query iam_permissions_admin. Account: {1} [{0}] - Principal name: {2} - Policy name: {3}.
 alert_text_args:
   - "a.id"
   - "a.name"
   - "p.name"
+  - "policy.name"
 alert_text_type: alert_text_only
 alert:
   - slack:
