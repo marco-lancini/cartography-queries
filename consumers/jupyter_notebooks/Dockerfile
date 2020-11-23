@@ -1,13 +1,3 @@
-#
-# BUILD AND PUSH
-# Version:
-#   docker build -t cartography_jupyter:1.0 -f consumers/jupyter_notebooks/Dockerfile .
-#   docker tag cartography_jupyter:1.0 marcolancini/cartography_jupyter:1.0
-#   docker push marcolancini/cartography_jupyter:1.0
-# Latest:
-#   docker tag cartography_jupyter:1.0 marcolancini/cartography_jupyter:latest
-#   docker push marcolancini/cartography_jupyter:latest
-#
 FROM python:3.7-slim
 
 RUN addgroup --gid 11111 app
