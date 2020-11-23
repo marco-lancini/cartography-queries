@@ -20,7 +20,7 @@ The easiest way to run and test this, is to use the following Docker image,
 which runs a Jupyter lab preloaded with these reports:
 
 ```bash
-❯ docker run --rm -p8080:8080 ghcr.io/marco-lancini/cartography-jupyter:latest
+❯ docker run --rm -p8080:8080 ghcr.io/marco-lancini/cartography_jupyter:latest
 ```
 
 ![](../../.github/cartography_jupyter.png)

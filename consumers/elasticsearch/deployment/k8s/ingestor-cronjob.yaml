@@ -24,7 +24,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: cartography-elastic-ingestor
-              image: ghcr.io/marco-lancini/cartography-elastic-ingestor:latest
+              image: ghcr.io/marco-lancini/cartography_elastic-ingestor:latest
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
