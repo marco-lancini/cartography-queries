@@ -8,12 +8,12 @@ on:
         required: false
   push:
     branches:
-      - main
+      - master
     paths:
       - 'queries/**/*'
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - 'queries/**/*'
 
