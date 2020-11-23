@@ -936,6 +936,15 @@
                 "fielddata": true
               }
             }
+          },
+          "region": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
           }
         }
       },
@@ -1079,6 +1088,19 @@
           }
         }
       },
+      "policy": {
+        "properties": {
+          "name": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          }
+        }
+      },
       "peer": {
         "properties": {
           "connection_id": {
@@ -1201,6 +1223,24 @@
           },
           "publicly_accessible": {
             "type": "boolean"
+          },
+          "region": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "created_at": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
           }
         }
       },
