@@ -73,7 +73,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: 📄 Show Build Output
-        uses: actions/github-script@0.9.0
+        uses: actions/github-script@v3
         if: github.event_name == 'pull_request'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
