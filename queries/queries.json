@@ -1324,6 +1324,25 @@
         ]
     },
     {
+        "name": "ecr_repos_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of ECRRepositories by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:ECRRepository) RETURN ",
+        "return": "a.name, a.id, r.name, r.region, r.created_at ORDER BY a.name, r.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "repository_name",
+            "region",
+            "creation_time"
+        ]
+    },
+    {
         "name": "gcp_project_list",
         "tags": [
             "inventory",
