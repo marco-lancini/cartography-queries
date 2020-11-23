@@ -1,13 +1,3 @@
-#
-# BUILD AND PUSH
-# Version:
-#   docker build -t cartography_queries:1.3 -f queries/Dockerfile .
-#   docker tag cartography_queries:1.3 marcolancini/cartography_queries:1.3
-#   docker push marcolancini/cartography_queries:1.3
-# Latest:
-#   docker tag cartography_queries:1.3 marcolancini/cartography_queries:latest
-#   docker push marcolancini/cartography_queries:latest
-#
 FROM python:3.7-slim
 
 RUN addgroup --gid 11111 app
