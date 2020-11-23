@@ -27,7 +27,7 @@ jobs:
       FOLDER: ${{ github.workspace }}/consumers/elasticsearch/deployment/k8s
       REGISTRY: ghcr.io
       VERSION_FILE: VERSION
-      IMAGE_NAME: cartography-elastic-ingestor
+      IMAGE_NAME: cartography_elastic_ingestor
 
     steps:
       - name: 📂 Checkout repository

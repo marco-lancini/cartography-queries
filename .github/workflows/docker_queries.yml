@@ -25,7 +25,7 @@ jobs:
       FOLDER: ${{ github.workspace }}/queries
       REGISTRY: ghcr.io
       VERSION_FILE: VERSION
-      IMAGE_NAME: cartography-queries
+      IMAGE_NAME: cartography_queries
 
     steps:
       - name: 📂 Checkout repository
