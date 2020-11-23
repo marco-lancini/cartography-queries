@@ -80,7 +80,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = `#### Image: 📋 \`${process.env.IMAGE_NAME}\`
-            
+
             |     | Step        | Result                                       |
             | --- | ----------  | -------------------------------------------- |
             | 🎫  | **Login**   | \`${{ steps.login.outcome }}\`               |
