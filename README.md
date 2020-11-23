@@ -54,9 +54,9 @@ For simplicity, you can also directly use the [related Docker image](https://git
 
 | Command                                                                                | Action                                                               |
 | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `docker run --rm ghcr.io/marco-lancini/cartography-queries:latest --count`             | Count all available queries                                          |
-| `docker run --rm ghcr.io/marco-lancini/cartography-queries:latest --get-all-tags`      | List all available tags                                              |
-| `docker run --rm ghcr.io/marco-lancini/cartography-queries:latest --tags=aws,security` | List queries filtered by tags (`aws` and `security` in this example) |
+| `docker run --rm ghcr.io/marco-lancini/cartography_queries:latest --count`             | Count all available queries                                          |
+| `docker run --rm ghcr.io/marco-lancini/cartography_queries:latest --get-all-tags`      | List all available tags                                              |
+| `docker run --rm ghcr.io/marco-lancini/cartography_queries:latest --tags=aws,security` | List queries filtered by tags (`aws` and `security` in this example) |
 
 ## Consumers
 

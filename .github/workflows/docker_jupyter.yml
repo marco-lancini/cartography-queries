@@ -27,7 +27,7 @@ jobs:
       FOLDER: ${{ github.workspace }}/consumers/jupyter_notebooks
       REGISTRY: ghcr.io
       VERSION_FILE: VERSION
-      IMAGE_NAME: cartography-jupyter
+      IMAGE_NAME: cartography_jupyter
 
     steps:
       - name: 📂 Checkout repository
