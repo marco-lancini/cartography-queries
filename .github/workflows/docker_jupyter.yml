@@ -65,6 +65,7 @@ jobs:
           echo "::set-output name=build-output::$output"
 
       - name: 🛡 Run Trivy vulnerability scanner
+        continue-on-error: true
         uses: aquasecurity/trivy-action@0.0.8
         id: trivy
         with:
@@ -98,7 +99,7 @@ jobs:
             })
 
       - name: ❓ Build Status
-        if: steps.build.outcome == 'failure'
+        if: steps.build.outcome == 'failure' || steps.trivy.outcome == 'failure'
         run: exit 1
 
       - name: 🚀 Push image to GitHub Container Registry
