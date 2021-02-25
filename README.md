@@ -50,7 +50,7 @@ As shown in the snippet above, each query has the following fields:
 ## Query Manager
 
 The query manager (`queries/query_manager.py`) script is a quick command line option for inspecting/filtering Cartography queries (without actually running them).
-For simplicity, you can also directly use the [related Docker image](https://github.com/users/marco-lancini/packages/container/package/cartography-queries) created with this `Dockerfile`:
+For simplicity, you can also directly use the [related Docker image](https://github.com/users/marco-lancini/packages/container/package/cartography_queries) created with this `Dockerfile`:
 
 | Command                                                                                | Action                                                               |
 | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
