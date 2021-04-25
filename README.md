@@ -47,7 +47,7 @@ As shown in the snippet above, each query has the following fields:
 - `return`: the fields to select from the query
 - `result_headers`: human readable list of the fields that are going to be returned by `query`
 
-## Query Manager
+### Query Manager
 
 The query manager (`queries/query_manager.py`) script is a quick command line option for inspecting/filtering Cartography queries (without actually running them).
 For simplicity, you can also directly use the [related Docker image](https://github.com/users/marco-lancini/packages/container/package/cartography_queries) created with this `Dockerfile`:
@@ -73,3 +73,8 @@ The `consumers/jupyter_notebooks` folder contains all the code needed to get you
 See the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/jupyter_notebooks/README.md) file in that folder for more information on the available notebooks.
 
 For detailed instructions on how to set them up, please refer to section "[Repeatability: Jupyter Notebooks](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography/#repeatability-jupyter-notebooks)" of the "[Mapping Moving Clouds: how to stay on top of your ephemeral environments with Cartography](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography)" blog post.
+
+
+## Deployment on Kubernetes
+
+I've now descibed an automated process to get Neo4J and Cartography up and running in a Kubernetes cluster at: [Automating Cartography Deployments on Kubernetes](https://www.marcolancini.it/2021/blog-cartography-on-kubernetes/).
