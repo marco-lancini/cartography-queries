@@ -64,13 +64,13 @@ For simplicity, you can also directly use the [related Docker image](https://git
 
 The `consumers/elasticsearch` folder contains all the code needed to get you started with integrating Elasticsearch with Cartography data.
 
-For more information, please refer to the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/elasticsearch/README.md) file in that folder, and the "[Tracking Moving Clouds: How to continuously track cloud assets with Cartography](https://www.marcolancini.it/2020/blog-tracking-moving-clouds-with-cartography)" blog post.
+For more information, please refer to the [README.md](https://github.com/marco-lancini/cartography-queries/blob/main/consumers/elasticsearch/README.md) file in that folder, and the "[Tracking Moving Clouds: How to continuously track cloud assets with Cartography](https://www.marcolancini.it/2020/blog-tracking-moving-clouds-with-cartography)" blog post.
 
 #### Jupyter Notebooks
 
 The `consumers/jupyter_notebooks` folder contains all the code needed to get you started with your own Jupyter reports for analysing Cartography data.
 
-See the [README.md](https://github.com/marco-lancini/cartography-queries/blob/master/consumers/jupyter_notebooks/README.md) file in that folder for more information on the available notebooks.
+See the [README.md](https://github.com/marco-lancini/cartography-queries/blob/main/consumers/jupyter_notebooks/README.md) file in that folder for more information on the available notebooks.
 
 For detailed instructions on how to set them up, please refer to section "[Repeatability: Jupyter Notebooks](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography/#repeatability-jupyter-notebooks)" of the "[Mapping Moving Clouds: how to stay on top of your ephemeral environments with Cartography](https://www.marcolancini.it/2020/blog-mapping-moving-clouds-with-cartography)" blog post.
 
