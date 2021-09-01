@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.9.7-slim
 
 RUN addgroup --gid 11111 app
 RUN adduser --shell /bin/false --uid 11111 --ingroup app app
