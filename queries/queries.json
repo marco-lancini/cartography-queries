@@ -324,7 +324,7 @@
             "misconfig",
             "security"
         ],
-        "description": "List of EKSClusters by AWSAccount",
+        "description": "Which EKSClusters are directly exposed to the internet?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(c:EKSCluster{exposed_internet: true}) RETURN ",
         "return": "a.name, a.id, c.name, c.region, c.status, c.version, c.platform_version, c.exposed_internet, c.endpoint, c.endpoint_public_access, c.audit_logging, c.rolearn ORDER BY a.name, c.region, c.state, c.exposed_internet",
         "result_headers": [
@@ -351,7 +351,7 @@
             "misconfig",
             "security"
         ],
-        "description": "List of EKSClusters by AWSAccount",
+        "description": "Which EKSClusters have audit logging disabled?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(c:EKSCluster{audit_logging: false}) RETURN ",
         "return": "a.name, a.id, c.name, c.region, c.status, c.version, c.platform_version, c.exposed_internet, c.endpoint, c.endpoint_public_access, c.audit_logging, c.rolearn ORDER BY a.name, c.region, c.state, c.exposed_internet",
         "result_headers": [
@@ -1370,8 +1370,8 @@
             "list",
             "security"
         ],
-        "description": "List of GCPProjects which cannot be analysed by Cartography (lack of permissions)",
-        "query": "MATCH (a:GCPProject)-[r:RESOURCE]-() WITH a, count(r) as links WHERE links = 1 RETURN ",
+        "description": "List of GCPProjects with seemingly no resources",
+        "query": "MATCH (a:GCPProject)-[r:RESOURCE]-() WITH a, count(r) as links WHERE links = 1 AND NOT a.id STARTS WITH 'sys-' RETURN ",
         "return": "a.id, a.displayname ORDER BY a.displayname",
         "result_headers": [
             "project_id",
