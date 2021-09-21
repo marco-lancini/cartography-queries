@@ -4,7 +4,7 @@ This is the companion repo for the "[Continuous Visibility into Ephemeral Cloud 
 
 ## Custom Queries
 
-The file `queries/queries.json` contains a set of custom queries specifically created for analyzing data collected by Cartography, and is structured as a list of dictionaries, where each dictionary represents an annotated query (enriched with metadata).
+The file `queries/queries.json` contains a set of custom queries specifically created for analysing data collected by Cartography, and is structured as a list of dictionaries, where each dictionary represents an annotated query (enriched with metadata).
 
 
 ## Consumers
@@ -24,7 +24,7 @@ For more information, please refer to the [README.md](consumers/jupyter_notebook
 
 ## Deployment on Kubernetes
 
-I've now descibed an automated process to get Neo4J and Cartography up and running in a Kubernetes cluster at: [Automating Cartography Deployments on Kubernetes](https://www.marcolancini.it/2021/blog-cartography-on-kubernetes/).
+I've now described an automated process to get Neo4J and Cartography up and running in a Kubernetes cluster at: [Automating Cartography Deployments on Kubernetes](https://www.marcolancini.it/2021/blog-cartography-on-kubernetes/).
 
 
 

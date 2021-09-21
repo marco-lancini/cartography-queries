@@ -26,20 +26,21 @@ spec:
             - name: cartography-elastic-ingestor
               image: ghcr.io/marco-lancini/cartography_elastic-ingestor:latest
               securityContext:
-                runAsUser: 1000
-                runAsGroup: 1000
+                allowPrivilegeEscalation: false
               env:
-                - name: ELASTIC_URL
-                  value: 'elastic.example.com'
-                - name: ELASTIC_INDEX
-                  value: 'cartography'
-                - name: ELASTIC_DRY_RUN
-                  value: 'False'
                 - name: NEO4J_URI
                   value: 'bolt://neo4j-bolt-service:7687'
                 - name: NEO4J_USER
                   value: 'neo4j'
-                - name: ES_INDEX_SPEC
+                - name: ELASTIC_URL
+                  value: 'elastic.example.com'
+                - name: ELASTIC_TLS_ENABLED
+                  value: 'False'
+                - name: ELASTIC_INDEX
+                  value: 'cartography'
+                - name: ELASTIC_DRY_RUN
+                  value: 'False'
+                - name: ELASTIC_INDEX_SPEC
                   value: '/opt/es-index/es-index.json'
               command:
                 - '/bin/sh'
@@ -53,14 +54,14 @@ spec:
                   # Run ingestor
                   python3 /app/ingestor.py
               volumeMounts:
-                - name: cartography-elastic-configmap-volume
-                  mountPath: /opt/es-index
-                  readOnly: true
                 - name: elasticsearch-credentials-volume
                   mountPath: /etc/vault/secret/cartography-es-writer
                   readOnly: true
                 - name: neo4j-password-secrets-volume
                   mountPath: /etc/vault/secret/neo4j-password-secrets
+                  readOnly: true
+                - name: cartography-elastic-configmap-volume
+                  mountPath: /opt/es-index
                   readOnly: true
           volumes:
             - name: elasticsearch-credentials-volume

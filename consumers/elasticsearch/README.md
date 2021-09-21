@@ -8,7 +8,8 @@ This folder is composed as follows:
 
 | Subfolder                            | Description                                                                                            |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| [deployment](deployment)             | Contains Kubernetes manifests and python code for the custom Elasticsearch Ingestor                    |
+| [deployment](deployment)             | Contains Kubernetes manifests for the CronJob                                                          |
+| [docker](docker)                     | Contains Dockerfile and python code for the custom Elasticsearch Ingestor                              |
 | [elastalert_rules](elastalert_rules) | Contains the source code (as yaml) of the Elastalert rules defined to trigger on occurrences of drift  |
 | [kibana](kibana)                     | Contains an export of all the Kibana visualizations and dashboards used to visualize Cartography data  |
 | [transforms](kibana)                 | Contains the source code (as json) of the Elastic Transforms powering the drift detection capabilities |

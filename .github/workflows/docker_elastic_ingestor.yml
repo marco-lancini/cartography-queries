@@ -10,13 +10,13 @@ on:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/deployment/k8s/**/*'
+      - 'consumers/elasticsearch/docker/**/*'
       - 'queries/queries.json'
   pull_request:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/deployment/k8s/**/*'
+      - 'consumers/elasticsearch/docker/**/*'
       - 'queries/queries.json'
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      FOLDER: ${{ github.workspace }}/consumers/elasticsearch/deployment/k8s
+      FOLDER: ${{ github.workspace }}/consumers/elasticsearch/docker
       REGISTRY: ghcr.io
       VERSION_FILE: VERSION
       IMAGE_NAME: cartography_elastic_ingestor
