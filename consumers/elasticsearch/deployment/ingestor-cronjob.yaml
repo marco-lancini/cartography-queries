@@ -3,9 +3,6 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: cartography-elastic-ingestor
-  labels:
-    app: cartography
-    component: cartography-elastic-ingestor
 spec:
   schedule: '0 7 * * *' # Run every day at 7am
   concurrencyPolicy: Forbid
@@ -13,10 +10,6 @@ spec:
     spec:
       backoffLimit: 5
       template:
-        metadata:
-          labels:
-            app: cartography
-            component: cartography-elastic-ingestor
         spec:
           restartPolicy: Never
           securityContext:
@@ -33,7 +26,7 @@ spec:
                 - name: NEO4J_USER
                   value: 'neo4j'
                 - name: ELASTIC_URL
-                  value: 'elastic.example.com'
+                  value: 'elasticsearch-es-http.elastic-system.svc.cluster.local:9200'
                 - name: ELASTIC_TLS_ENABLED
                   value: 'False'
                 - name: ELASTIC_INDEX
