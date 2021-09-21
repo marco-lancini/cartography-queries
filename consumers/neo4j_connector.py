@@ -4,7 +4,9 @@ import logging
 from neo4j import GraphDatabase
 from datetime import datetime, timedelta
 
-logger = logging.getLogger('neo4j_connector')
+logging.basicConfig()
+logger = logging.getLogger("neo4j_connector")
+logger.setLevel(logging.INFO)
 
 NEO4J_QUERIES_FILES = [
     'queries.json',
@@ -18,6 +20,7 @@ class NeoDB(object):
     the backend Neo4j database.
     This should never be instantiated directly.
     """
+
     def __init__(self):
         self._parse_config()
         self._connect()
@@ -49,9 +52,10 @@ class NeoDB(object):
             result = tx.run(query, **kwargs)
         else:
             result = tx.run(query)
-        return result
+        values = [record.data() for record in result]
+        return values
 
-    def query(self, q, kwargs):
+    def query(self, q, kwargs=None):
         with self._driver.session() as session:
             return session.read_transaction(self._exec_query, q, kwargs)
 
@@ -64,6 +68,7 @@ class Neo4jConnector(object):
     Main connector which abstract over the actual execution of queries,
     and provide an interface to run queries and obtain results
     """
+
     def __init__(self):
         # Initialize DB
         self.db = NeoDB()
@@ -73,7 +78,7 @@ class Neo4jConnector(object):
     def _load_queries(self):
         extracted = []
         for fname in NEO4J_QUERIES_FILES:
-            path = os.path.join("/", fname)
+            path = os.path.join("/app/", fname)
             if not os.path.isfile(path):
                 logger.warning('File "{}" not found. Skipping...'.format(path))
                 continue
@@ -84,6 +89,7 @@ class Neo4jConnector(object):
                 extracted.append(temp)
         queries_str = "[%s]" % (",".join(extracted))
         self.QUERIES = json.loads(queries_str)
+        logger.info(f"{len(self.QUERIES)} queries loaded")
 
     #
     # UTILS
@@ -121,14 +127,20 @@ class Neo4jConnector(object):
     def _filter_by_account(self, cypher, account):
         if account:
             if 'WHERE' in cypher:
-                cypher = cypher.replace(' WHERE ', ' WHERE a.name = "{}" and '.format(account))
+                cypher = cypher.replace(
+                    ' WHERE ', ' WHERE a.name = "{}" and '.format(account))
             else:
-                cypher = cypher.replace(' RETURN ', ' WHERE a.name = "{}" RETURN '.format(account))
+                cypher = cypher.replace(
+                    ' RETURN ', ' WHERE a.name = "{}" RETURN '.format(account))
         return cypher
 
     #
     # EXECUTE QUERIES
     #
+    def query_raw(self, cypher):
+        logger.info("Executing a raw query: {}".format(cypher))
+        return self.db.query(cypher)
+
     def _execute_queries(self, queries, account):
         queries_result = []
         for q in queries:
@@ -136,15 +148,18 @@ class Neo4jConnector(object):
             kwargs = self._parse_dynamic_params(q)
             # If an account is provided, inject a WHERE clause to filter by account
             cypher = self._filter_by_account(q['query'], account)
-            # Execute the query and parse results as dictionaries
+            # Add return clause
             cypher = "{} {}".format(cypher, q['return'])
-            records = [x.data() for x in self.db.query(cypher, kwargs)]
+            # Execute the query and parse results as dictionaries
+            logger.debug(f"Running query: {cypher}")
+            records = self.db.query(cypher, kwargs)
             # Add records to result list
             temp = {}
             temp['name'] = q['name']
             temp['description'] = q['description']
             temp['headers'] = q['result_headers']
             temp['result'] = records
+            logger.debug(f"Result: {len(records)} records")
             queries_result.append(temp)
         return queries_result
 
@@ -154,3 +169,7 @@ class Neo4jConnector(object):
         selected_queries = self._filter_by_tags(self.QUERIES, tags)
         # Run queries
         return self._execute_queries(selected_queries, account)
+
+
+if __name__ == '__main__':
+    Neo4jConnector()
