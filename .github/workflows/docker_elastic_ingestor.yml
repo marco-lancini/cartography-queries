@@ -10,13 +10,13 @@ on:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/deployment/k8s/**/*'
+      - 'consumers/elasticsearch/docker/**/*'
       - 'queries/queries.json'
   pull_request:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/deployment/k8s/**/*'
+      - 'consumers/elasticsearch/docker/**/*'
       - 'queries/queries.json'
 
 jobs:
