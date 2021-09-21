@@ -12,7 +12,7 @@ This folder is composed as follows:
 | [docker](docker)                     | Contains Dockerfile and python code for the custom Elasticsearch Ingestor                              |
 | [elastalert_rules](elastalert_rules) | Contains the source code (as yaml) of the Elastalert rules defined to trigger on occurrences of drift  |
 | [kibana](kibana)                     | Contains an export of all the Kibana visualizations and dashboards used to visualize Cartography data  |
-| [transforms](kibana)                 | Contains the source code (as json) of the Elastic Transforms powering the drift detection capabilities |
+| [transforms](transforms)             | Contains the source code (as json) of the Elastic Transforms powering the drift detection capabilities |
 
 For more information, please refer to the "[Tracking Moving Clouds: How to continuously track cloud assets with Cartography](https://www.marcolancini.it/2020/blog-tracking-moving-clouds-with-cartography)" blog post.
 
