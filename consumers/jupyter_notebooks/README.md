@@ -22,7 +22,7 @@ which runs a Jupyter lab preloaded with these reports:
 ❯ docker run --rm -p8080:8080 ghcr.io/marco-lancini/cartography_jupyter:latest
 ```
 
-![](../../.github/cartography_jupyter.png)
+![](../../.github/images/cartography_jupyter.png)
 
 ---
 
