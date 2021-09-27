@@ -1610,11 +1610,12 @@
       ],
       "description": "List of GCPInstances by GCPProject",
       "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance) RETURN ",
-      "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, instance.status",
+      "return": "a.id, a.displayname, instance.instancename, instance.hostname, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, instance.status",
       "result_headers": [
           "project_id",
           "project_name",
           "instance_name",
+          "instance_hostname",
           "instance_status",
           "zone",
           "internet_exposed"
@@ -1651,11 +1652,12 @@
       ],
       "description": "Which GCPInstances are directly exposed to the internet?",
       "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance{exposed_internet: true}) RETURN ",
-      "return": "a.id, a.displayname, instance.instancename, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, instance.status",
+      "return": "a.id, a.displayname, instance.instancename, instance.hostname, instance.status, instance.zone_name, instance.exposed_internet ORDER BY a.id, instance.status",
       "result_headers": [
           "project_id",
           "project_name",
           "instance_name",
+          "instance_hostname",
           "instance_status",
           "zone",
           "internet_exposed"
@@ -1671,11 +1673,12 @@
       ],
       "description": "List of GCPInstances with networking information",
       "query": "MATCH (a:GCPProject)-[:RESOURCE]->(instance:GCPInstance)-[:NETWORK_INTERFACE]->(nic:GCPNetworkInterface)-[:RESOURCE]->(ac:GCPNicAccessConfig) RETURN ",
-      "return": "a.id, a.displayname, instance.instancename, instance.status, instance.exposed_internet, nic.name, nic.private_ip, ac.public_ip, ac.network_tier ORDER BY a.id, instance.instancename",
+      "return": "a.id, a.displayname, instance.instancename, instance.hostname, instance.status, instance.exposed_internet, nic.name, nic.private_ip, ac.public_ip, ac.network_tier ORDER BY a.id, instance.instancename",
       "result_headers": [
           "project_id",
           "project_name",
           "instance_name",
+          "instance_hostname",
           "instance_status",
           "internet_exposed",
           "network_interface_name",
