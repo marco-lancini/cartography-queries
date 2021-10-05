@@ -1103,6 +1103,52 @@
         ]
     },
     {
+        "name": "aws_kms_list",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of KMSKey by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(k:KMSKey) RETURN ",
+        "return": "a.name, a.id, k.id, k.name, k.description, k.enabled, k.region, k.anonymous_actions, k.anonymous_access ORDER BY a.name, k.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "key_id",
+            "key_name",
+            "key_description",
+            "enabled",
+            "region",
+            "anonymous_actions",
+            "anonymous_access"
+        ]
+    },
+    {
+        "name": "aws_kms_anonymous",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which KMSKey have anonymous access enabled?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(k:KMSKey{anonymous_access: true}) RETURN ",
+        "return": "a.name, a.id, k.id, k.name, k.description, k.enabled, k.region, k.anonymous_actions ORDER BY a.name, k.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "key_id",
+            "key_name",
+            "key_description",
+            "enabled",
+            "region",
+            "anonymous_actions"
+        ]
+    },
+    {
         "name": "aws_secretsmanager_list",
         "tags": [
             "inventory",
