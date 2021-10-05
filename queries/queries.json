@@ -951,7 +951,7 @@
         ],
         "description": "List of RedshiftClusters by AWSAccount",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:RedshiftCluster) RETURN ",
-        "return": "a.name, a.id, r.arn, r.cluster_status, r.number_of_nodes, r.publicly_accessible, r.endpoint_address, r.endpoint_port, r.db_name, r.master_username",
+        "return": "a.name, a.id, r.arn, r.cluster_status, r.number_of_nodes, r.publicly_accessible, r.endpoint_address, r.endpoint_port, r.db_name, r.master_username, r.encrypted, r.cluster_create_time ORDER BY a.name",
         "result_headers": [
             "account_name",
             "account_id",
@@ -962,7 +962,9 @@
             "endpoint_address",
             "endpoint_port",
             "db_name",
-            "master_username"
+            "master_username",
+            "encrypted",
+            "creation_time"
         ]
     },
     {
@@ -976,7 +978,7 @@
         ],
         "description": "Which RedshiftClusters are directly exposed to the internet?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:RedshiftCluster{publicly_accessible: true}) RETURN ",
-        "return": "a.name, a.id, r.arn, r.cluster_status, r.number_of_nodes, r.publicly_accessible, r.endpoint_address, r.endpoint_port, r.db_name, r.master_username",
+        "return": "a.name, a.id, r.arn, r.cluster_status, r.number_of_nodes, r.publicly_accessible, r.endpoint_address, r.endpoint_port, r.db_name, r.master_username, r.encrypted, r.cluster_create_time ORDER BY a.name",
         "result_headers": [
             "account_name",
             "account_id",
@@ -987,7 +989,71 @@
             "endpoint_address",
             "endpoint_port",
             "db_name",
-            "master_username"
+            "master_username",
+            "encrypted",
+            "creation_time"
+        ]
+    },
+    {
+        "name": "aws_emr_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EMRClusters by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(c:EMRCluster) RETURN ",
+        "return": "a.name, a.id, c.id, c.region, c.servicerole ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_id",
+            "region",
+            "servicerole"
+        ]
+    },
+    {
+        "name": "aws_apigateway_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of APIGatewayRestAPI by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(g:APIGatewayRestAPI) RETURN ",
+        "return": "a.name, a.id, g.id, g.version, g.region, g.anonymous_actions, g.anonymous_access, g.createddate ORDER BY a.name, g.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "gateway_id",
+            "gateway_version",
+            "region",
+            "anonymous_actions",
+            "anonymous_access",
+            "creation_date"
+        ]
+    },
+    {
+        "name": "aws_apigateway_anonymous",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which APIGatewayRestAPI have anonymous access enabled?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(g:APIGatewayRestAPI{anonymous_access: true}) RETURN ",
+        "return": "a.name, a.id, g.id, g.version, g.region, g.anonymous_actions, g.createddate ORDER BY a.name, g.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "gateway_id",
+            "gateway_version",
+            "region",
+            "anonymous_actions",
+            "creation_date"
         ]
     },
     {
@@ -1008,6 +1074,32 @@
             "hub_id",
             "subscribed_at",
             "auto_enable_controls"
+        ]
+    },
+    {
+        "name": "aws_config_rule_list",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of AWSConfigRule by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:AWSConfigRule) RETURN ",
+        "return": "a.name, a.id, r.id, r.name, r.description, r.scope_compliance_resource_types, r.scope_tag_compliance_resource_id, r.source_owner, r.source_identifier, r.source_details, r.region ORDER BY a.name, r.region",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "rule_id",
+            "rule_name",
+            "rule_description",
+            "scope_compliance_resource_types",
+            "scope_tag_compliance_resource_id",
+            "source_owner",
+            "source_identifier",
+            "source_details",
+            "region"
         ]
     },
     {
@@ -1417,6 +1509,26 @@
             "account_id",
             "repository_name",
             "region"
+        ]
+    },
+    {
+        "name": "aws_ecr_images_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of ECRRepositoryImage by ECRRepository",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:ECRRepository)-[:REPO_IMAGE]->(i:ECRRepositoryImage) RETURN ",
+        "return": "a.name, a.id, r.name, r.region, i.uri, i.tag ORDER BY a.name, r.region, r.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "repository_name",
+            "region",
+            "image_uri",
+            "image_tag"
         ]
     },
     {
