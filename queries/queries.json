@@ -169,44 +169,7 @@
             "groups"
         ]
     },
-    {
-        "name": "iam_policy_list",
-        "tags": [
-            "inventory",
-            "cloud",
-            "aws",
-            "list"
-        ],
-        "description": "List of AWSPolicy by AWSAccount (attached to at least 1 entity)",
-        "query": "MATCH (a:AWSAccount)-[:AWS_POLICY]->(p:AWSPolicy) WHERE p.attachmentcount > 0 RETURN ",
-        "return": "a.name, a.id, p.name, p.isattachable, p.attachmentcount, p.updatedate ORDER BY a.name, p.attachmentcount DESC",
-        "result_headers": [
-            "account_name",
-            "account_id",
-            "policy_name",
-            "is_attachable",
-            "attachment_count",
-            "update_date"
-        ]
-    },
-    {
-        "name": "iam_policy_many_accounts",
-        "tags": [
-            "security",
-            "cloud",
-            "aws",
-            "drift"
-        ],
-        "description": "Which AWSPolicy is used in too many AWSAccounts?",
-        "query": "MATCH (a:AWSAccount)-[:AWS_POLICY]->(p:AWSPolicy) WHERE p.attachmentcount > 0 RETURN ",
-        "return": "p.name, p.updatedate, count(a.name), collect(distinct a.name) ORDER BY count(a.name) DESC",
-        "result_headers": [
-            "policy_name",
-            "update_date",
-            "usage_count",
-            "accounts"
-        ]
-    },
+
     {
         "name": "iam_role_list",
         "tags": [
@@ -476,13 +439,15 @@
         ],
         "description": "List of EC2KeyPairs by AWSAccount",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(k:EC2KeyPair) RETURN ",
-        "return": "a.name, a.id, k.keyname, k.id, k.region ORDER BY a.name, k.region DESC",
+        "return": "a.name, a.id, k.keyname, k.id, k.region, k.keyfingerprint, k.user_uploaded ORDER BY a.name, k.region DESC",
         "result_headers": [
             "account_name",
             "account_id",
             "key_name",
             "key_id",
-            "region"
+            "region",
+            "fingerprint",
+            "user_uploaded"
         ]
     },
     {
@@ -906,14 +871,17 @@
         ],
         "description": "List of Lambda by AWSAccount",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:AWSLambda) RETURN ",
-        "return": "a.name, a.id, l.name, l.description, l.runtime, l.modifieddate ORDER BY a.name, l.runtime",
+        "return": "a.name, a.id, l.name, l.description, l.version, l.runtime, l.state, l.modifieddate, l.signingprofileversionarn ORDER BY a.name, l.runtime",
         "result_headers": [
             "account_name",
             "account_id",
             "name",
             "description",
+            "version",
             "runtime",
-            "modified_date"
+            "state",
+            "modified_date",
+            "signing_profile"
         ]
     },
     {
@@ -935,6 +903,43 @@
             "state",
             "owner_id"
         ]
+    },
+    {
+      "name": "internet_gateway_list",
+      "tags": [
+          "inventory",
+          "cloud",
+          "aws",
+          "list"
+      ],
+      "description": "List of AWSInternetGateway by AWSAccount",
+      "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(t:AWSInternetGateway) RETURN ",
+      "return": "a.name, a.id, t.arn, t.region ORDER BY a.name, t.region",
+      "result_headers": [
+          "account_name",
+          "account_id",
+          "arn",
+          "region"
+      ]
+    },
+    {
+      "name": "internet_gateway_by_vpc",
+      "tags": [
+          "inventory",
+          "cloud",
+          "aws",
+          "list"
+      ],
+      "description": "List of AWSInternetGateway by AWSVpc",
+      "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(v:AWSVpc)<-[:ATTACHED_TO]-(t:AWSInternetGateway) RETURN ",
+      "return": "a.name, a.id, v.id, t.arn, t.region ORDER BY a.name, t.region, v.id",
+      "result_headers": [
+          "account_name",
+          "account_id",
+          "vpc_id",
+          "arn",
+          "region"
+      ]
     },
     {
         "name": "redshift_list",
@@ -986,24 +991,97 @@
         ]
     },
     {
-        "name": "dns_list",
+        "name": "aws_securityhub_list",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of SecurityHub by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(h:SecurityHub) RETURN ",
+        "return": "a.name, a.id, h.id, h.subscribed_at, h.auto_enable_controls ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "hub_id",
+            "subscribed_at",
+            "auto_enable_controls"
+        ]
+    },
+    {
+        "name": "aws_secretsmanager_list",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of SecretsManagerSecret by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:SecretsManagerSecret) RETURN ",
+        "return": "a.name, a.id, s.name, s.description, s.primary_region, s.owning_service, s.kms_key_id, s.rotation_enabled, s.last_rotated_date, s.last_accessed_date, s.last_changed_date ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "secret_name",
+            "secret_description",
+            "primary_region",
+            "owning_service",
+            "kms_key",
+            "rotation_enabled",
+            "last_rotated_date",
+            "last_accessed_date",
+            "last_changed_date"
+        ]
+    },
+    {
+        "name": "aws_secretsmanager_no_rotation",
+        "tags": [
+            "inventory",
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of SecretsManagerSecret by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:SecretsManagerSecret) WHERE s.rotation_enabled is null OR s.rotation = false RETURN ",
+        "return": "a.name, a.id, s.name, s.description, s.primary_region, s.owning_service, s.kms_key_id, s.last_rotated_date, s.last_accessed_date, s.last_changed_date ORDER BY a.name",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "secret_name",
+            "secret_description",
+            "primary_region",
+            "owning_service",
+            "kms_key",
+            "last_rotated_date",
+            "last_accessed_date",
+            "last_changed_date"
+        ]
+    },
+    {
+        "name": "aws_sqs_list",
         "tags": [
             "inventory",
             "cloud",
             "aws",
-            "list",
-            "networking"
+            "list"
         ],
-        "description": "List of DNSRecord / IP pairs by AWSAccount",
-        "query": "MATCH (a:AWSAccount)-[RESOURCE]->(z:AWSDNSZone)<-[MEMBER_OF_DNS_ZONE]-(r:DNSRecord) RETURN ",
-        "return": "a.name, a.id, z.name, r.name, r.type, r.value ORDER BY a.name, z.name, r.name",
+        "description": "List of SQSQueue by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(q:SQSQueue) RETURN ",
+        "return": "a.name, a.id, q.id, q.name, q.region, q.url, q.fifo_queue, q.kms_master_key_id, q.policy ORDER BY a.name",
         "result_headers": [
             "account_name",
             "account_id",
-            "dns_zone",
-            "record_name",
-            "record_type",
-            "record_value"
+            "queue_id",
+            "queue_name",
+            "region",
+            "url",
+            "fifo",
+            "kms_key",
+            "policy"
         ]
     },
     {
