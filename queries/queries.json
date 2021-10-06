@@ -599,6 +599,273 @@
         ]
     },
     {
+        "name": "aws_ec2_image_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EC2Images by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(i:EC2Image) RETURN ",
+        "return": "a.name, a.id, i.id, i.name, i.description, i.state, i.ispublic, i.platform, i.architecture, i.type, i.region, i.location, i.creationdate ORDER BY a.name, i.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "image_id",
+            "image_name",
+            "image_description",
+            "state",
+            "is_public",
+            "platform",
+            "architecture",
+            "type",
+            "region",
+            "location",
+            "creation_date"
+        ]
+    },
+    {
+        "name": "aws_ec2_image_public",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which EC2Images are publicly accessible?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(i:EC2Image{ispublic: true}) RETURN ",
+        "return": "a.name, a.id, i.id, i.name, i.description, i.state, i.platform, i.architecture, i.type, i.region, i.location, i.creationdate ORDER BY a.name, i.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "image_id",
+            "image_name",
+            "image_description",
+            "state",
+            "platform",
+            "architecture",
+            "type",
+            "region",
+            "location",
+            "creation_date"
+        ]
+    },
+    {
+        "name": "aws_ebs_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EBSVolumes by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(v:EBSVolume) RETURN ",
+        "return": "a.name, a.id, v.id, v.type, v.state, v.encrypted, v.size, v.region, v.createtime ORDER BY a.name, v.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "volume_id",
+            "type",
+            "state",
+            "encrypted",
+            "size",
+            "region",
+            "creation_time"
+        ]
+    },
+    {
+        "name": "aws_ebs_unencrypted",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which EBSVolumes have encryption turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(v:EBSVolume{encrypted: false) RETURN ",
+        "return": "a.name, a.id, v.id, v.type, v.state, v.size, v.region, v.createtime ORDER BY a.name, v.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "volume_id",
+            "type",
+            "state",
+            "size",
+            "region",
+            "creation_time"
+        ]
+    },
+    {
+        "name": "aws_ebs_by_ec2",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list",
+            "usage"
+        ],
+        "description": "List of EBS Volumes used by EC2 instances",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(instance:EC2Instance)<-[:ATTACHED_TO]-(v:EBSVolume) WITH a, instance, v, collect(distinct v.id) as num_type RETURN ",
+        "return": "a.name, a.id, instance.instanceid, count(num_type), collect(distinct v.id) ORDER BY count(num_type) DESC",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "instance_id",
+            "num_of_volumes",
+            "ebs_volumes"
+        ]
+    },
+    {
+        "name": "aws_ebs_snapshot_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of EBSSnapshot by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:EBSSnapshot) RETURN ",
+        "return": "a.name, a.id, s.id, s.description, s.state, s.statemessage, s.encrypted, s.volumeid, s.volumesize, s.region ORDER BY a.name, s.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "snapshot_id",
+            "description",
+            "state",
+            "state_message",
+            "encrypted",
+            "volume_id",
+            "volume_size",
+            "region"
+        ]
+    },
+    {
+        "name": "aws_ebs_snapshot_unencrypted",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which EBSSnapshot have encryption turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:EBSSnapshot{encrypted: false}) RETURN ",
+        "return": "a.name, a.id, s.id, s.description, s.state, s.statemessage, s.volumeid, s.volumesize, s.region ORDER BY a.name, s.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "snapshot_id",
+            "description",
+            "state",
+            "state_message",
+            "volume_id",
+            "volume_size",
+            "region"
+        ]
+    },
+    {
+        "name": "aws_rds_cluster_list",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of RDSCluster by AWSAccount",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSCluster) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.database_name, rds.master_username, rds.status, rds.storage_encrypted, rds.deletion_protection, rds.port, rds.endpoint, rds.reader_endpoint, rds.capacity, rds.backup_retention_period, rds.earliest_restorable_time, rds.latest_restorable_time, rds.allocated_storage, rds.engine, rds.engine_version, rds.engine_mode, rds.cluster_create_time ORDER BY a.name, rds.status",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_id",
+            "database_name",
+            "master_username",
+            "status",
+            "storage_encrypted",
+            "deletion_protection",
+            "port",
+            "endpoint",
+            "reader_endpoint",
+            "capacity",
+            "backup_retention_period",
+            "earliest_restorable_time",
+            "latest_restorable_time",
+            "allocated_storage",
+            "engine",
+            "engine_version",
+            "engine_mode",
+            "creation_time"
+          ]
+    },
+    {
+        "name": "aws_rds_cluster_unencrypted",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which RDSCluster have encryption turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSCluster{storage_encrypted: false}) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.database_name, rds.master_username, rds.status, rds.storage_encrypted, rds.deletion_protection, rds.port, rds.endpoint, rds.reader_endpoint, rds.capacity, rds.backup_retention_period, rds.earliest_restorable_time, rds.latest_restorable_time, rds.allocated_storage, rds.engine, rds.engine_version, rds.engine_mode, rds.cluster_create_time ORDER BY a.name, rds.status",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_id",
+            "database_name",
+            "master_username",
+            "status",
+            "storage_encrypted",
+            "deletion_protection",
+            "port",
+            "endpoint",
+            "reader_endpoint",
+            "capacity",
+            "backup_retention_period",
+            "earliest_restorable_time",
+            "latest_restorable_time",
+            "allocated_storage",
+            "engine",
+            "engine_version",
+            "engine_mode",
+            "creation_time"
+          ]
+    },
+    {
+        "name": "aws_rds_cluster_deletion_protection",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "Which RDSCluster have deletion protection turned off?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSCluster{deletion_protection: false}) RETURN ",
+        "return": "a.name, a.id, rds.id, rds.database_name, rds.master_username, rds.status, rds.storage_encrypted, rds.deletion_protection, rds.port, rds.endpoint, rds.reader_endpoint, rds.capacity, rds.backup_retention_period, rds.earliest_restorable_time, rds.latest_restorable_time, rds.allocated_storage, rds.engine, rds.engine_version, rds.engine_mode, rds.cluster_create_time ORDER BY a.name, rds.status",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "cluster_id",
+            "database_name",
+            "master_username",
+            "status",
+            "storage_encrypted",
+            "deletion_protection",
+            "port",
+            "endpoint",
+            "reader_endpoint",
+            "capacity",
+            "backup_retention_period",
+            "earliest_restorable_time",
+            "latest_restorable_time",
+            "allocated_storage",
+            "engine",
+            "engine_version",
+            "engine_mode",
+            "creation_time"
+          ]
+    },
+    {
         "name": "rds_list",
         "tags": [
             "inventory",
@@ -608,16 +875,25 @@
         ],
         "description": "List of RDSInstance by AWSAccount",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSInstance) RETURN ",
-        "return": "a.name, a.id, rds.id, rds.endpoint_address, rds.publicly_accessible, rds.storage_encrypted, rds.master_username, rds.db_name, rds.instance_create_time ORDER BY a.name, rds.publicly_accessible, rds.storage_encrypted",
+        "return": "a.name, a.id, rds.id, rds.db_cluster_identifier, rds.endpoint_address, rds.endpoint_port, rds.publicly_accessible, rds.db_instance_port, rds.storage_encrypted, rds.iam_database_authentication_enabled, rds.master_username, rds.db_name, rds.backup_retention_period, rds.ca_certificate_identifier, rds.enhanced_monitoring_resource_arn, rds.engine, rds.engine_version, rds.instance_create_time ORDER BY a.name, rds.publicly_accessible, rds.storage_encrypted",
         "result_headers": [
             "account_name",
             "account_id",
             "rds_id",
+            "cluster_id",
             "endpoint_address",
+            "endpoint_port",
             "publicly_accessible",
+            "instance_port",
             "storage_encrypted",
+            "iam_authentication_enabled",
             "master_username",
             "db_name",
+            "backup_retention_period",
+            "ca_certificate_identifier",
+            "cloudwatch_log_stream",
+            "engine",
+            "engine_version",
             "creation_time"
         ]
     },
@@ -655,7 +931,7 @@
         ],
         "description": "Which RDS instances are directly exposed to the internet?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(rds:RDSInstance{publicly_accessible: true}) RETURN ",
-        "return": "a.name, a.id, rds.id, rds.publicly_accessible,rds.endpoint_address, rds.endpoint_port, rds.storage_encrypted, rds.master_username, rds.db_name, rds.engine_version ORDER BY a.name, rds.publicly_accessible, rds.storage_encrypted",
+        "return": "a.name, a.id, rds.id, rds.publicly_accessible,rds.endpoint_address, rds.endpoint_port, rds.storage_encrypted, rds.master_username, rds.db_name, rds.engine, rds.engine_version ORDER BY a.name, rds.publicly_accessible, rds.storage_encrypted",
         "result_headers": [
             "account_name",
             "account_id",
@@ -666,6 +942,7 @@
             "storage_encrypted",
             "master_username",
             "db_name",
+            "engine",
             "engine_version"
         ]
     },
@@ -722,13 +999,16 @@
         ],
         "description": "List of S3Bucket by AWSAccount",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:S3Bucket) RETURN ",
-        "return": "a.name, a.id, s.name, s.anonymous_access, s.anonymous_actions, s.creationdate ORDER BY a.name, s.creationdate",
+        "return": "a.name, a.id, s.name, s.anonymous_access, s.anonymous_actions, s.default_encryption, s.encryption_algorithm, s.bucket_key_enabled, s.creationdate ORDER BY a.name, s.creationdate",
         "result_headers": [
             "account_name",
             "account_id",
             "bucket_name",
             "anonymous_access",
             "anonymous_actions",
+            "encrypted",
+            "encryption_algorithm",
+            "bucket_key_enabled",
             "creationdate"
         ]
     },
@@ -742,6 +1022,26 @@
         ],
         "description": "Which S3 buckets have a policy granting any level of anonymous access to the bucket?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:S3Bucket) WHERE s.anonymous_access = true RETURN ",
+        "return": "a.name, a.id, s.name, s.anonymous_access, s.anonymous_actions, s.creationdate ORDER BY a.name, s.creationdate",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "bucket_name",
+            "anonymous_access",
+            "anonymous_actions",
+            "creationdate"
+        ]
+    },
+    {
+        "name": "aws_s3_unencrypted",
+        "tags": [
+            "security",
+            "cloud",
+            "aws",
+            "misconfig"
+        ],
+        "description": "Which S3 buckets do not have default encryption enabled?",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:S3Bucket) WHERE NOT s.default_encryption = true RETURN ",
         "return": "a.name, a.id, s.name, s.anonymous_access, s.anonymous_actions, s.creationdate ORDER BY a.name, s.creationdate",
         "result_headers": [
             "account_name",
