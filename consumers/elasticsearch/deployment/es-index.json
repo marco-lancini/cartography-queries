@@ -621,6 +621,15 @@
               }
             }
           },
+          "hostname": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
           "imageid": {
             "type": "keyword",
             "fields": {

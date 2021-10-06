@@ -41,14 +41,15 @@
         ],
         "description": "List of AWSPrincipal by AWSAccount",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal) RETURN ",
-        "return": "a.name, a.id, p.name, p.userid, p.arn, p.passwordlastused",
+        "return": "a.name, a.id, p.name, p.userid, p.arn, p.passwordlastused, p.createdate ORDER BY a.name, p.passwordlastused DESC",
         "result_headers": [
             "account_name",
             "account_id",
             "principal_name",
             "principal_id",
             "principal_arn",
-            "passwordlastused"
+            "passwordlastused",
+            "creation_date"
         ]
     },
     {
@@ -62,13 +63,14 @@
         ],
         "description": "Which named AWSUsers do exist?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSUser) RETURN ",
-        "return": "a.name, a.id, p.name, p.userid, p.passwordlastused ORDER BY a.name, p.passwordlastused",
+        "return": "a.name, a.id, p.name, p.userid, p.passwordlastused ORDER BY a.name, p.passwordlastused, p.createdate ORDER BY a.name, p.passwordlastused DESC",
         "result_headers": [
             "account_name",
             "account_id",
             "user_name",
             "user_id",
-            "passwordlastused"
+            "passwordlastused",
+            "creation_date"
         ]
     },
     {
@@ -169,7 +171,6 @@
             "groups"
         ]
     },
-
     {
         "name": "iam_role_list",
         "tags": [
@@ -1202,6 +1203,25 @@
             "state",
             "modified_date",
             "signing_profile"
+        ]
+    },
+    {
+        "name": "aws_lambda_eventsource",
+        "tags": [
+            "inventory",
+            "cloud",
+            "aws",
+            "list"
+        ],
+        "description": "List of AWSLambdaEventSourceMapping by AWSLambda",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:AWSLambda)-[:RESOURCE]->(e:AWSLambdaEventSourceMapping) RETURN ",
+        "return": "a.name, a.id, l.name, e.eventsourcearn, e.state ORDER BY a.name, e.state",
+        "result_headers": [
+            "account_name",
+            "account_id",
+            "lambda_name",
+            "eventsourcearn",
+            "state"
         ]
     },
     {
