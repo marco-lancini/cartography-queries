@@ -63,7 +63,7 @@
         ],
         "description": "Which named AWSUsers do exist?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(p:AWSUser) RETURN ",
-        "return": "a.name, a.id, p.name, p.userid, p.passwordlastused ORDER BY a.name, p.passwordlastused, p.createdate ORDER BY a.name, p.passwordlastused DESC",
+        "return": "a.name, a.id, p.name, p.userid, p.passwordlastused ORDER BY a.name, p.passwordlastused DESC",
         "result_headers": [
             "account_name",
             "account_id",
