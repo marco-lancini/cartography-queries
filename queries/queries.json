@@ -738,53 +738,6 @@
         ]
     },
     {
-        "name": "aws_ebs_snapshot_list",
-        "tags": [
-            "inventory",
-            "cloud",
-            "aws",
-            "list"
-        ],
-        "description": "List of EBSSnapshot by AWSAccount",
-        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:EBSSnapshot) RETURN ",
-        "return": "a.name, a.id, s.id, s.description, s.state, s.statemessage, s.encrypted, s.volumeid, s.volumesize, s.region ORDER BY a.name, s.state",
-        "result_headers": [
-            "account_name",
-            "account_id",
-            "snapshot_id",
-            "description",
-            "state",
-            "state_message",
-            "encrypted",
-            "volume_id",
-            "volume_size",
-            "region"
-        ]
-    },
-    {
-        "name": "aws_ebs_snapshot_unencrypted",
-        "tags": [
-            "security",
-            "cloud",
-            "aws",
-            "list"
-        ],
-        "description": "Which EBSSnapshot have encryption turned off?",
-        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:EBSSnapshot{encrypted: false}) RETURN ",
-        "return": "a.name, a.id, s.id, s.description, s.state, s.statemessage, s.volumeid, s.volumesize, s.region ORDER BY a.name, s.state",
-        "result_headers": [
-            "account_name",
-            "account_id",
-            "snapshot_id",
-            "description",
-            "state",
-            "state_message",
-            "volume_id",
-            "volume_size",
-            "region"
-        ]
-    },
-    {
         "name": "aws_rds_cluster_list",
         "tags": [
             "inventory",
