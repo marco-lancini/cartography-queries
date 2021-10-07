@@ -704,7 +704,7 @@
             "list"
         ],
         "description": "Which EBSVolumes have encryption turned off?",
-        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(v:EBSVolume{encrypted: false) RETURN ",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(v:EBSVolume{encrypted: false}) RETURN ",
         "return": "a.name, a.id, v.id, v.type, v.state, v.size, v.region, v.createtime ORDER BY a.name, v.state",
         "result_headers": [
             "account_name",
