@@ -69,8 +69,7 @@
             "account_id",
             "user_name",
             "user_id",
-            "passwordlastused",
-            "creation_date"
+            "passwordlastused"
         ]
     },
     {
@@ -180,7 +179,7 @@
             "list"
         ],
         "description": "List of AWSRole by AWSAccount",
-        "query": "MATCH (a:AWSAccount)-[:AWS_ROLE]->(r:AWSRole) RETURN ",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:AWSRole) RETURN ",
         "return": "a.name, a.id, r.name, r.arn, r.roleid, r.createdate ORDER BY a.name, r.createdate",
         "result_headers": [
             "account_name",
@@ -201,7 +200,7 @@
             "drift"
         ],
         "description": "Which AWSRole can be assumed by which AWSPrincipal?",
-        "query": "MATCH (a:AWSAccount)-[:AWS_ROLE]->(r:AWSRole)-[TRUSTS_AWS_PRINCIPAL]->(p:AWSPrincipal) WITH a, r, p, collect(distinct p.arn) as pps RETURN ",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r:AWSRole)-[TRUSTS_AWS_PRINCIPAL]->(p:AWSPrincipal) WITH a, r, p, collect(distinct p.arn) as pps RETURN ",
         "return": "a.name, a.id, r.name, r.arn, count(pps), collect(distinct p.arn) ORDER BY count(pps) DESC",
         "result_headers": [
             "account_name",
@@ -222,7 +221,7 @@
             "drift"
         ],
         "description": "Which AWSRole can be assumed by which AWSRole?",
-        "query": "MATCH (a:AWSAccount)-[:AWS_ROLE]->(r1:AWSRole)-[STS_ASSUMEROLE_ALLOW]->(r2:AWSRole) WITH a, r1, r2, collect(distinct r2.arn) as roles RETURN ",
+        "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(r1:AWSRole)-[STS_ASSUMEROLE_ALLOW]->(r2:AWSRole) WITH a, r1, r2, collect(distinct r2.arn) as roles RETURN ",
         "return": "a.name, a.id, r1.name, r1.arn, count(roles), collect(distinct r2.arn) ORDER BY count(roles) DESC",
         "result_headers": [
             "account_name",
@@ -242,7 +241,7 @@
             "aws",
             "drift"
         ],
-        "description": "Which AWSPrincipals have root-like privileges?",
+        "description": "Which AWSPrincipals have admin-like privileges?",
         "query": "MATCH (stat:AWSPolicyStatement)--(policy:AWSPolicy)--(p:AWSPrincipal)<-[:RESOURCE]-(a:AWSAccount) WHERE stat.effect = 'Allow' AND any(x IN stat.resource WHERE x='*') AND any(x IN stat.action WHERE x='*') RETURN ",
         "return": "a.name, a.id, p.name, policy.name ORDER BY a.name, p.name",
         "result_headers": [

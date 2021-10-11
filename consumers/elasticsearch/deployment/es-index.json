@@ -760,6 +760,51 @@
               }
             }
           },
+          "name": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "description": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "enabled": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "anonymous_actions": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "anonymous_access": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
           "region": {
             "type": "keyword",
             "fields": {
@@ -1361,6 +1406,55 @@
           }
         }
       },
+      "h": {
+        "properties": {
+          "creationdate": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "id": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "subscribed_at": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "auto_enable_controls": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "description": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          }
+        }
+      },
       "s": {
         "properties": {
           "anonymous_access": {
@@ -1448,6 +1542,54 @@
             }
           },
           "target": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "primary_region": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "owning_service": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "kms_key_id": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "rotation_enabled": {
+            "type": "boolean"
+          },
+          "last_rotated_date": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
+          "last_accessed_date": {
             "type": "keyword",
             "fields": {
               "search": {
