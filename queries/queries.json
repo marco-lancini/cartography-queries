@@ -1475,7 +1475,7 @@
             "aws",
             "list"
         ],
-        "description": "List of SecretsManagerSecret by AWSAccount",
+        "description": "Which SecretsManagerSecrets do not have rotation enabled?",
         "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:SecretsManagerSecret) WHERE s.rotation_enabled is null OR s.rotation = false RETURN ",
         "return": "a.name, a.id, s.name, s.description, s.primary_region, s.owning_service, s.kms_key_id, s.last_rotated_date, s.last_accessed_date, s.last_changed_date ORDER BY a.name",
         "result_headers": [
