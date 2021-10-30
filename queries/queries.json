@@ -8,8 +8,8 @@
             "aws"
         ],
         "description": "List of AWSAccounts currently analysed",
-        "query": "MATCH (n:AWSAccount) RETURN ",
-        "return": "n.id, n.name",
+        "query": "MATCH (a:AWSAccount) RETURN ",
+        "return": "a.id, a.name",
         "result_headers": [
             "account_id",
             "account_name"
@@ -1879,8 +1879,8 @@
           "security"
       ],
       "description": "Full list of GCPProjects",
-      "query": "MATCH (n:GCPProject) RETURN ",
-      "return": "n.projectid, n.displayname, n.projectnumber, n.lifecyclestate ORDER BY n.projectid",
+      "query": "MATCH (a:GCPProject) RETURN ",
+      "return": "a.projectid, a.displayname, a.projectnumber, a.lifecyclestate ORDER BY a.projectid",
       "result_headers": [
           "project_id",
           "project_name",
