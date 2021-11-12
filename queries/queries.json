@@ -2352,5 +2352,73 @@
           "record_ttl",
           "record_data"
       ]
+    },
+    {
+      "name": "do_account_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "digitalocean",
+        "list",
+        "security"
+      ],
+      "description": "Full list of DigitalOcean Accounts",
+      "query": "MATCH (a:DOAccount) RETURN ",
+      "return": "a.id, a.status, a.droplet_limit, a.floating_ip_limit ORDER BY a.status",
+      "result_headers": [
+        "account_id",
+        "account_status",
+        "droplet_limit",
+        "floating_ip_limit"
+      ]
+    },
+    {
+      "name": "do_project_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "digitalocean",
+        "list",
+        "security"
+      ],
+      "description": "Full list of DigitalOcean Projects",
+      "query": "MATCH (a:DOProject) RETURN ",
+      "return": "a.id, a.name, a.description, a.environment, a.account_id, a.created_at ORDER BY a.account_id",
+      "result_headers": [
+        "project_id",
+        "project_name",
+        "project_description",
+        "environment",
+        "account_id",
+        "created_at"
+      ]
+    },
+    {
+      "name": "do_droplet_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "digitalocean",
+        "list",
+        "security"
+      ],
+      "description": "Full list of DigitalOcean Droplets",
+      "query": "MATCH (instance:DODroplet) RETURN ",
+      "return": "instance.account_id, instance.project_id, instance.id, instance.name, instance.status, instance.region, instance.ip_address, instance.locked, instance.image, instance.kernel, instance.size, instance.volumes, instance.created_at ORDER BY instance.account_id, instance.project_id",
+      "result_headers": [
+        "account_id",
+        "project_id",
+        "instance_id",
+        "instance_name",
+        "status",
+        "region",
+        "ip_address",
+        "locked",
+        "image",
+        "kernel",
+        "size",
+        "volumes",
+        "created_at"
+      ]
     }
 ]
