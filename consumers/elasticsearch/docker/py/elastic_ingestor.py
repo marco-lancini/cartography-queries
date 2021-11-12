@@ -147,6 +147,10 @@ def main():
     queries_results = ingestor.query_by_tag(['gcp'])
     ingestor.push_results(queries_results)
 
+    # Queries - DigitalOcean
+    queries_results = ingestor.query_by_tag(['digitalocean'])
+    ingestor.push_results(queries_results)
+
     logger.info("Ingestion completed successfully")
 
 
