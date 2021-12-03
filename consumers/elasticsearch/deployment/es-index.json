@@ -600,6 +600,15 @@
       },
       "instance": {
         "properties": {
+          "id": {
+            "type": "keyword",
+            "fields": {
+              "search": {
+                "type": "text",
+                "fielddata": true
+              }
+            }
+          },
           "db_instance_identifier": {
             "type": "keyword",
             "fields": {

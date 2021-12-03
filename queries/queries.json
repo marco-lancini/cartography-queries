@@ -2420,5 +2420,207 @@
         "volumes",
         "created_at"
       ]
+    },
+    {
+      "name": "azure_principal_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "azure",
+        "list"
+      ],
+      "description": "List of AzurePrincipal",
+      "query": "MATCH (t:AzureTenant)-[RESOURCE]->(p:AzurePrincipal) RETURN ",
+      "return": "t.id, p.email ORDER BY t.id",
+      "result_headers": [
+        "tenant_id",
+        "principal_email"
+      ]
+    },
+    {
+        "name": "azure_subscription_list",
+        "tags": [
+          "inventory",
+          "cloud",
+          "azure",
+          "list",
+          "security"
+        ],
+        "description": "List of Azure Suscriptions",
+        "query": "MATCH (t:AzureTenant)-[RESOURCE]->(a:AzureSubscription) RETURN ",
+        "return": "t.id, a.id, a.name, a.state, a.path",
+        "result_headers": [
+          "tenant_id",
+          "subscription_id",
+          "subscription_name",
+          "state",
+          "path"
+        ]
+    },
+    {
+        "name": "azure_vm_list",
+        "tags": [
+          "inventory",
+          "cloud",
+          "azure",
+          "list"
+        ],
+        "description": "List of AzureVirtualMachine",
+        "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(i:AzureVirtualMachine) RETURN ",
+        "return": "a.id, a.name, i.id, i.name, i.plan, i.identity_type, i.resourcegroup, i.type, i.location, i.license_type ORDER BY a.id",
+        "result_headers": [
+          "subscription_id",
+          "subscription_name",
+          "instance_id",
+          "instance_name",
+          "plan",
+          "identity_type",
+          "resource_group",
+          "type",
+          "location",
+          "license_type"
+        ]
+    },
+    {
+        "name": "azure_datadisks_list",
+        "tags": [
+          "inventory",
+          "cloud",
+          "azure",
+          "list"
+        ],
+        "description": "List of AzureDataDisks",
+        "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(i:AzureVirtualMachine)-[:ATTACHED_TO]->(d:AzureDataDisk) RETURN ",
+        "return": "a.id, a.name, i.id, i.name, d.id, d.name, d.image, d.size ORDER BY a.id",
+        "result_headers": [
+          "subscription_id",
+          "subscription_name",
+          "instance_id",
+          "instance_name",
+          "disk_id",
+          "disk_name",
+          "image",
+          "size"
+        ]
+    },
+    {
+      "name": "azure_disks_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "azure",
+        "list"
+      ],
+      "description": "List of AzureDisks",
+      "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(d:AzureDisk) RETURN ",
+      "return": "a.id, a.name, d.id, d.name, d.type, d.resourcegroup, d.location, d.encryption, d.disksizegb ORDER BY a.id",
+      "result_headers": [
+        "subscription_id",
+        "subscription_name",
+        "disk_id",
+        "disk_name",
+        "type",
+        "resource_group",
+        "location",
+        "encryption",
+        "size"
+      ]
+    },
+    {
+      "name": "azure_snapshot_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "azure",
+        "list"
+      ],
+      "description": "List of AzureSnapshot",
+      "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(d:AzureSnapshot) RETURN ",
+      "return": "a.id, a.name, d.id, d.name, d.type, d.resourcegroup, d.location, d.encryption, d.disksizegb ORDER BY a.id",
+      "result_headers": [
+        "subscription_id",
+        "subscription_name",
+        "snapshot_id",
+        "snapshot_name",
+        "type",
+        "resource_group",
+        "location",
+        "encryption",
+        "size"
+      ]
+    },
+    {
+      "name": "azure_sql_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "azure",
+        "list"
+      ],
+      "description": "List of AzureSQLServer",
+      "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(s:AzureSQLServer) RETURN ",
+      "return": "a.id, a.name, s.id, s.name, s.kind, s.state, s.resourcegroup, s.version ORDER BY a.id",
+      "result_headers": [
+        "subscription_id",
+        "subscription_name",
+        "server_id",
+        "server_name",
+        "kind",
+        "state",
+        "resource_group",
+        "version"
+      ]
+    },
+    {
+      "name": "azure_storage_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "azure",
+        "list"
+      ],
+      "description": "List of AzureStorageAccount",
+      "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(s:AzureStorageAccount) RETURN ",
+      "return": "a.id, a.name, s.id, s.name, s.kind, s.type, s.resourcegroup, s.location, s.provisioningstate ORDER BY a.id",
+      "result_headers": [
+        "subscription_id",
+        "subscription_name",
+        "storage_id",
+        "storage_name",
+        "kind",
+        "type",
+        "resource_group",
+        "location",
+        "state"
+      ]
+    },
+    {
+      "name": "azure_cosmodb_list",
+      "tags": [
+        "inventory",
+        "cloud",
+        "azure",
+        "list"
+      ],
+      "description": "List of AzureCosmosDBAccount",
+      "query": "MATCH (a:AzureSubscription)-[:RESOURCE]->(c:AzureCosmosDBAccount) RETURN ",
+      "return": "a.id, a.name, c.id, c.name, c.kind, c.type, c.resourcegroup, c.location, c.ipranges, c.capabilities, c.documentendpoint, c.keyvaulturi, c.publicnetworkaccess, c.disablekeybasedmetadatawriteaccess, c.provisioningstate ORDER BY a.id",
+      "result_headers": [
+        "subscription_id",
+        "subscription_name",
+        "cosmodb_id",
+        "cosmodb_name",
+        "kind",
+        "type",
+        "resource_group",
+        "location",
+        "ip_ranges",
+        "capabilities",
+        "document_endpoint",
+        "keyvault_uri",
+        "publicnetworkaccess",
+        "disable_metadata_write",
+        "state"
+      ]
     }
 ]
