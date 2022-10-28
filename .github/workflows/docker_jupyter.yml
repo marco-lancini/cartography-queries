@@ -2,10 +2,6 @@ name: '[DOCKER IMAGE] Cartography Jupyter'
 
 on:
   workflow_dispatch:
-    inputs:
-      git-ref:
-        description: Git Ref (Optional)
-        required: false
   push:
     branches:
       - main
@@ -102,7 +98,7 @@ jobs:
       # Push image to GCR
       #
       - name: 🚀 Push image to GitHub Container Registry
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         id: docker_push
         uses: ./.github/actions/docker-push-gcr
         with:
