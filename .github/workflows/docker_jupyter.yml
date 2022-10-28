@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/docker/**/*'
+      - 'consumers/jupyter_notebooks/docker/**/*'
       - 'queries/queries.json'
   pull_request:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/docker/**/*'
+      - 'consumers/jupyter_notebooks/docker/**/*'
       - 'queries/queries.json'
 
 jobs:
