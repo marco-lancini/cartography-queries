@@ -27,3 +27,6 @@ jobs:
       FOLDER: ${{ github.workspace }}/consumers/elasticsearch/docker
       REGISTRY: ghcr.io/${{ github.repository_owner }}
       IMAGE_NAME: cartography_elastic_ingestor
+    secrets:
+      GHCR_USER: ${{ github.repository_owner }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
