@@ -16,6 +16,11 @@ on:
         required: false
         type: string
         default: 'latest'
+    secrets:
+      GHCR_USER:
+        required: true
+      GHCR_TOKEN:
+        required: true
 
 jobs:
   # ============================================================================
@@ -52,7 +57,7 @@ jobs:
         id: login
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.GHCR_USER }}
           # Create a PAT with `write:packages` scopes and save it as an Actions secret `GHCR_TOKEN`
           password: ${{ secrets.GHCR_TOKEN }}
 
