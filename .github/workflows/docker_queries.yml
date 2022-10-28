@@ -6,14 +6,12 @@ on:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/docker/**/*'
-      - 'queries/queries.json'
+      - 'queries/**/*'
   pull_request:
     branches:
       - main
     paths:
-      - 'consumers/elasticsearch/docker/**/*'
-      - 'queries/queries.json'
+      - 'queries/**/*'
 
 jobs:
   run-docker:
