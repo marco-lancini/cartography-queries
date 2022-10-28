@@ -1,5 +1,7 @@
 FROM python:3.9.7-slim
 
+LABEL org.opencontainers.image.source = "https://github.com/marco-lancini/cartography-queries"
+
 # Setup app user
 RUN addgroup --gid 11111 --system app
 RUN adduser --shell /bin/false --uid 11111 --ingroup app --system app
