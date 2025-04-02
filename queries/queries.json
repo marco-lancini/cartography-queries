@@ -2615,5 +2615,156 @@
       "disable_metadata_write",
       "state"
     ]
+  },
+  {
+    "name": "rpr_s3_read_access",
+    "tags": [
+        "security",
+        "cloud",
+        "aws",
+        "rpr"
+    ],
+    "description": "See who can read which S3 buckets",
+    "query": "MATCH path=(a:AWSPrincipal)-[:CAN_READ]->(s:S3Bucket) RETURN ",
+    "return": "a.name, a.userid, a.arn, s.name, s.anonymous_access, s.anonymous_actions",
+    "result_headers": [
+        "principal_name",
+        "principal_userid",
+        "principal_arn",
+        "bucket_name",
+        "bucket_anonymous_access",
+        "bucket_anonymous_actions"
+    ]
+},
+{
+    "name": "rpr_secrets_manager_access",
+    "tags": [
+        "security",
+        "cloud",
+        "aws",
+        "rpr"
+    ],
+    "description": "See who can retrieve which Secrets Manager Secrets",
+    "query": "MATCH path=(a:AWSPrincipal)-[:GET_SECRET]->(s:SecretsManagerSecret) RETURN ",
+    "return": "a.name, a.userid, a.arn, s.name, s.description",
+    "result_headers": [
+        "principal_name",
+        "principal_userid",
+        "principal_arn",
+        "secret_name",
+        "secret_description"
+    ]
+},
+  {
+      "name": "lambda_and_identities",
+      "tags": [
+          "inventory",
+          "cloud",
+          "aws",
+          "list"
+      ],
+      "description": "List AWS Lambdas and the roles they operate as",
+      "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:AWSLambda) OPTIONAL MATCH (l)-[:STS_ASSUME_ROLE_ALLOW]->(r:AWSPrincipal) RETURN ",
+      "return": "a.name, a.id, l.name, l.description, l.version, l.runtime, l.state, l.modifieddate, l.signingprofileversionarn, r.name",
+      "result_headers": [
+          "account_name",
+          "account_id",
+          "lambda_name",
+          "description",
+          "version",
+          "runtime",
+          "state",
+          "modified_date",
+          "signing_profile",
+          "role_name"
+      ]
+  },
+  {
+      "name": "foreign_trust_relationships",
+      "tags": [
+          "security",
+          "cloud",
+          "aws",
+          "trust"
+      ],
+      "description": "View roles that trust roles in foreign accounts",
+      "query": "MATCH path=(a:AWSAccount)-[:RESOURCE]->(p:AWSPrincipal)-[t:TRUSTS_AWS_PRINCIPAL]->(p2:AWSPrincipal)<-[r2:RESOURCE]-(a2:AWSAccount{foreign:true}) WHERE NOT p.name CONTAINS \"AWSServiceRole\" AND NOT p.name CONTAINS \"QuickSetup\" RETURN ",
+      "return": "p, t, p2, r2, a2",
+      "result_headers": [
+          "principal",
+          "trust",
+          "foreign_principal",
+          "resource",
+          "foreign_account"
+      ]
+  },
+
+  {
+      "name": "kms_keys_by_account",
+      "tags": [
+          "security",
+          "cloud",
+          "aws",
+          "list"
+      ],
+      "description": "List KMS keys by account",
+      "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(k:KMSKey) RETURN ",
+      "return": "a.name, a.id, k.id, k.name, k.description, k.enabled, k.region, k.anonymous_actions, k.anonymous_access ORDER BY a.name, k.region",
+      "result_headers": [
+          "account_name",
+          "account_id",
+          "key_id",
+          "key_name",
+          "key_description",
+          "enabled",
+          "region",
+          "anonymous_actions",
+          "anonymous_access"
+      ]
+  },
+  {
+      "name": "secrets_manager_secrets_by_account",
+      "tags": [
+          "security",
+          "cloud",
+          "aws",
+          "list"
+      ],
+      "description": "List SecretsManagerSecrets by account",
+      "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(s:SecretsManagerSecret) RETURN ",
+      "return": "a.name, a.id, s.name, s.description, s.primary_region, s.owning_service, s.kms_key_id, s.rotation_enabled, s.last_rotated_date, s.last_accessed_date, s.last_changed_date ORDER BY a.name",
+      "result_headers": [
+          "account_name",
+          "account_id",
+          "secret_name",
+          "secret_description",
+          "primary_region",
+          "owning_service",
+          "kms_key",
+          "rotation_enabled",
+          "last_rotated_date",
+          "last_accessed_date",
+          "last_changed_date"
+      ]
+  },
+  {
+      "name": "ec2_exposed_by_load_balancer",
+      "tags": [
+          "networking",
+          "cloud",
+          "aws",
+          "list"
+      ],
+      "description": "View which EC2 instances are exposed by which load balancer",
+      "query": "MATCH (a:AWSAccount)-[:RESOURCE]->(l:LoadBalancer)-[:EXPOSE]->(e:EC2Instance) WITH a, l, e, collect(distinct e.instanceid) as instances RETURN ",
+      "return": "a.name, a.id, l.name, l.scheme, count(instances), collect(distinct e.instanceid) ORDER BY count(instances) DESC",
+      "result_headers": [
+          "account_name",
+          "account_id",
+          "load_balancer_name",
+          "scheme",
+          "number_of_instances",
+          "instances"
+      ]
   }
 ]
