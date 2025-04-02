@@ -2617,37 +2617,44 @@
     ]
   },
   {
-      "name": "rpr_s3_read_access",
-      "tags": [
-          "security",
-          "cloud",
-          "aws",
-          "rpr"
-      ],
-      "description": "See who can read which S3 buckets",
-      "query": "MATCH path=(a:AWSPrincipal)-[:CAN_READ]->(s:S3Bucket) RETURN ",
-      "return": "a, s",
-      "result_headers": [
-          "principal",
-          "s3_bucket"
-      ]
-  },
-  {
-      "name": "rpr_secrets_manager_access",
-      "tags": [
-          "security",
-          "cloud",
-          "aws",
-          "rpr"
-      ],
-      "description": "See who can retrieve which Secrets Manager Secrets",
-      "query": "MATCH path=(a:AWSPrincipal)-[:GET_SECRET]->(s:SecretsManagerSecret) RETURN ",
-      "return": "a, s",
-      "result_headers": [
-          "principal",
-          "secret"
-      ]
-  },
+    "name": "rpr_s3_read_access",
+    "tags": [
+        "security",
+        "cloud",
+        "aws",
+        "rpr"
+    ],
+    "description": "See who can read which S3 buckets",
+    "query": "MATCH path=(a:AWSPrincipal)-[:CAN_READ]->(s:S3Bucket) RETURN ",
+    "return": "a.name, a.userid, a.arn, s.name, s.anonymous_access, s.anonymous_actions",
+    "result_headers": [
+        "principal_name",
+        "principal_userid",
+        "principal_arn",
+        "bucket_name",
+        "bucket_anonymous_access",
+        "bucket_anonymous_actions"
+    ]
+},
+{
+    "name": "rpr_secrets_manager_access",
+    "tags": [
+        "security",
+        "cloud",
+        "aws",
+        "rpr"
+    ],
+    "description": "See who can retrieve which Secrets Manager Secrets",
+    "query": "MATCH path=(a:AWSPrincipal)-[:GET_SECRET]->(s:SecretsManagerSecret) RETURN ",
+    "return": "a.name, a.userid, a.arn, s.name, s.description",
+    "result_headers": [
+        "principal_name",
+        "principal_userid",
+        "principal_arn",
+        "secret_name",
+        "secret_description"
+    ]
+},
   {
       "name": "lambda_and_identities",
       "tags": [
