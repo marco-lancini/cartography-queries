@@ -1,4 +1,4 @@
 jupyterlab==2.2.10
-voila==0.1.21
+voila==0.2.17
 neo4j==1.7.6
 pandas==1.0.3
